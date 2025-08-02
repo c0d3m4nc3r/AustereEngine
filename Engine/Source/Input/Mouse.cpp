@@ -1,5 +1,5 @@
-#include "Input/Mouse.hpp"
-#include "Core/Window.hpp"
+#include "Platform/Input.hpp"
+#include "Platform/Window.hpp"
 
 namespace AE
 {

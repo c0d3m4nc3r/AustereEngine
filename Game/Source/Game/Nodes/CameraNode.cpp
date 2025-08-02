@@ -1,8 +1,8 @@
 #include "Game/Nodes.hpp"
 
 #include <AE/Core/Engine.hpp>
-#include <AE/Core/Window.hpp>
-#include <AE/Input/Manager.hpp>
+#include <AE/Platform/Input.hpp>
+#include <AE/Platform/Window.hpp>
 #include <AE/Rendering/Camera.hpp>
 
 const AE::Key MOVE_FORWARD_KEY = AE::Key::W;

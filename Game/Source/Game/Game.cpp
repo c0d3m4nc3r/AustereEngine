@@ -2,9 +2,9 @@
 #include "Game/Nodes.hpp"
 
 #include <AE/Core/Engine.hpp>
-#include <AE/Core/Window.hpp>
 #include <AE/Core/Logger.hpp>
-#include <AE/Input/Manager.hpp>
+#include <AE/Platform/Input.hpp>
+#include <AE/Platform/Window.hpp>
 #include <AE/Lighting/Manager.hpp>
 #include <AE/Lighting/Sources.hpp>
 #include <AE/Rendering/Camera.hpp>

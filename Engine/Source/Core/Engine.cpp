@@ -1,9 +1,9 @@
 #include "Core/Engine.hpp"
 #include "Core/EngineSettings.hpp"
 #include "Core/Application.hpp"
-#include "Core/Window.hpp"
 #include "Core/Logger.hpp"
-#include "Input/Manager.hpp"
+#include "Platform/Input.hpp"
+#include "Platform/Window.hpp"
 #include "Lighting/Manager.hpp"
 #include "Rendering/Renderer.hpp"
 #include "Resources/Managers.hpp"
@@ -138,6 +138,7 @@ namespace AE
         }
 
         _lightMgr = std::make_unique<LightManager>();
+
         _renderer = std::make_unique<Renderer>(_lightMgr.get());
         if (!_renderer)
         {
