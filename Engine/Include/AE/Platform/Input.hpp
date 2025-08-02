@@ -2,12 +2,104 @@
 
 #include "PCH.hpp"
 
-#include <SDL3/SDL_scancode.h>
-#include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_events.h>
+
+#include <bitset>
 
 namespace AE
 {
+    class Window;
+    class Keyboard;
+    class Mouse;
+    class InputManager
+    {
+    public:
+    
+        InputManager(Window* window = nullptr);
+        ~InputManager() = default;
+    
+        Keyboard* GetKeyboard() const;
+        Mouse* GetMouse() const;
+    
+    private:
+    
+        std::unique_ptr<Keyboard> _keyboard;
+        std::unique_ptr<Mouse> _mouse;
+    
+        void _HandleEvent(const SDL_Event& event);
+        void _Update();
+    
+        friend class Engine;
+    };
+
+    /* --- Mouse --- */
+
+    enum class MouseButton
+    {
+        Left = SDL_BUTTON_LEFT,
+        Middle = SDL_BUTTON_MIDDLE,
+        Right = SDL_BUTTON_RIGHT,
+        X1 = SDL_BUTTON_X1,
+        X2 = SDL_BUTTON_X2,
+    };
+
+    class Mouse
+    {
+    public:
+    
+        Mouse(Window* window = nullptr);
+        ~Mouse() = default;
+    
+        bool IsButtonDown(MouseButton button) const;
+        bool IsButtonUp(MouseButton button) const;
+        bool IsButtonPressed(MouseButton button) const;
+        bool IsButtonReleased(MouseButton button) const;
+    
+        const glm::vec2& GetPosition() const;
+        const glm::vec2& GetDelta() const;
+        const glm::vec2& GetScroll() const;
+    
+        float GetPositionX() const;
+        float GetPositionY() const;
+        
+        float GetDeltaX() const;
+        float GetDeltaY() const;
+    
+        float GetScrollX() const;
+        float GetScrollY() const;
+    
+        bool IsCursorVisible() const;
+    
+        void SetPosition(const glm::vec2& position, bool global = false);
+        void SetPositionX(float x, bool global = false);
+        void SetPositionY(float y, bool global = false);
+    
+        void SetCursorVisible(bool visible);
+    
+    private:
+    
+        Window* _window = nullptr;
+    
+        std::bitset<8> _buttonStates;
+        std::bitset<8> _prevButtonStates;
+    
+        glm::vec2 _position, _delta, _scroll;
+    
+        bool _cursorVisible = true;
+    
+        void _HandleEvent(const SDL_Event& event);
+        void _Update();
+    
+        bool _GetButtonState(MouseButton button) const;
+        bool _GetPrevButtonState(MouseButton button) const;
+    
+        void _SetButtonState(MouseButton button, bool state);
+    
+        friend class InputManager;
+    };
+
+    /* --- Keyboard --- */
+
     enum class Key;
     class Keyboard
     {
@@ -38,9 +130,8 @@ namespace AE
         bool _GetPrevKeyState(Key key) const;
     
         friend class InputManager;
-    
     };
-    
+
     enum class Key
     {
         A = SDL_SCANCODE_A, B = SDL_SCANCODE_B, C = SDL_SCANCODE_C,

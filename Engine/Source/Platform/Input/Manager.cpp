@@ -1,4 +1,4 @@
-#include "Input/Manager.hpp"
+#include "Platform/Input.hpp"
 
 namespace AE
 {

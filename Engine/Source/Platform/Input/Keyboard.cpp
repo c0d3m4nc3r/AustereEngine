@@ -1,4 +1,4 @@
-#include "Input/Keyboard.hpp"
+#include "Platform/Input.hpp"
 
 namespace AE
 {

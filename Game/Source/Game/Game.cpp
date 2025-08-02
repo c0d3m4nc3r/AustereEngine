@@ -16,6 +16,7 @@
 #include <AE/Scene/Scene.hpp>
 #include <AE/World/Skybox.hpp>
 
+
 AustereGame::AustereGame(const AE::ApplicationInfo& info)
     : AE::Application(info) {}
 
