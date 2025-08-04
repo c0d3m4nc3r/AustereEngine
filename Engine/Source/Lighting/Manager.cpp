@@ -1,27 +1,45 @@
 #include "Lighting/Manager.hpp"
+#include "Core/Logger.hpp"
 
 namespace AE
 {
-    LightID LightManager::AddLight(std::unique_ptr<LightSource> light)
+    bool LightManager::AddLight(const std::string& name, std::unique_ptr<LightSource> light)
     {
-        LightID id = _nextID++;
-        _lights[id] = std::move(light);
-        return id;
+        LoggerContext ctx("LightManager", "AddLight");
+
+        auto [it, inserted] = _lights.emplace(name, std::move(light));
+        if (!inserted)
+        {
+            Logger::Error("Light source with name '{}' already exists!", name);
+            return false;
+        }
+
+        Logger::Debug("Added light source named '{}'!", name);
+
+        return true;
     }
 
-    void LightManager::RemoveLight(LightID id)
+    bool LightManager::RemoveLight(const std::string& name)
     {
-        _lights.erase(id);
-    }
+        LoggerContext ctx("LightManager", "RemoveLight");
 
-    void LightManager::Clear()
-    {
-        _lights.clear();
-        _nextID = 0;
+        auto it = _lights.find(name);
+        if (it != _lights.end())
+        {
+            _lights.erase(it);
+            Logger::Debug("Removed light source named '{}'!", name);
+            return true;
+        }
+
+        Logger::Error("Light source with name '{}' not found!", name);
+
+        return false;
     }
 
     void LightManager::Apply(Shader* shader)
     {
+        if (!shader) return;
+
         std::vector<LightSource*> directionalLights;
         std::vector<LightSource*> pointLights;
         std::vector<LightSource*> spotLights;
@@ -67,5 +85,10 @@ namespace AE
     size_t LightManager::GetLightCount() const
     {
         return _lights.size();
+    }
+
+    bool LightManager::HasLight(const std::string& name) const
+    {
+        return _lights.find(name) != _lights.end();
     }
 }

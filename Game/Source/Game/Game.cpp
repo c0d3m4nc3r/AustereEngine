@@ -50,7 +50,7 @@ bool AustereGame::OnInitialize()
 
     // Add light sources
     AE::LightManager* lightMgr = engine->GetLightManager();
-    lightMgr->AddLight(std::make_unique<AE::DirectionalLight>(
+    lightMgr->AddLight("Sun", std::make_unique<AE::DirectionalLight>(
         AE::Color::White, 1.0f, glm::normalize(glm::vec3(-0.5f, -1.0f, -0.5f))
     ));
 

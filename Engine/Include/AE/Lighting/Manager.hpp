@@ -7,33 +7,25 @@
 
 namespace AE
 {
-    using LightID = uint32_t;
-
     class LightManager
     {
     public:
-
-        // template <typename T, typename... Args>
-        // LightID CreateLight(Args&&... args);
-
-        LightID AddLight(std::unique_ptr<LightSource> light);
-        void RemoveLight(LightID id);
-        void Clear();
+        
+        bool AddLight(const std::string& name, std::unique_ptr<LightSource> light);
+        bool RemoveLight(const std::string& name);
         
         void Apply(Shader* shader);
         
         template <typename T>
-        T* GetLight(LightID id);
-
-        template <typename T>
-        const T* GetLight(LightID id) const;
+        T* GetLight(const std::string& name);
         
         size_t GetLightCount() const;
 
+        bool HasLight(const std::string& name) const;
+
     private:
 
-        std::unordered_map<LightID, std::unique_ptr<LightSource>> _lights;
-        LightID _nextID = 0;
+        std::unordered_map<std::string, std::unique_ptr<LightSource>> _lights;
     };
 }
 
