@@ -18,6 +18,11 @@ namespace AE
             const std::string& fragmentPath
         );
 
+        std::shared_ptr<Shader> LoadFromSource(const std::string& name,
+            const std::string& vertexSrc,
+            const std::string& fragmentSrc
+        );
+
     };
 
     class Texture;

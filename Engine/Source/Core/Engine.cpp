@@ -140,7 +140,7 @@ namespace AE
         _lightMgr = std::make_unique<LightManager>();
 
         _renderer = std::make_unique<Renderer>(_lightMgr.get());
-        if (!_renderer)
+        if (!_renderer->_Initialize())
         {
             Logger::Error("Renderer initialization failed! Aborting...");
             return false;

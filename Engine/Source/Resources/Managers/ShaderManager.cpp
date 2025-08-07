@@ -33,22 +33,63 @@ namespace AE
         Logger::Info("\tVertex: '{}'", vertexPath);
         Logger::Info("\tFragment: '{}'", fragmentPath);
 
-        const std::string vertexShaderSrc = ReadFile(vertexPath);
-        const std::string fragmentShaderSrc = ReadFile(fragmentPath);
+        const std::string vertexSrc = ReadFile(vertexPath);
+        const std::string fragmentSrc = ReadFile(fragmentPath);
 
-        if (vertexShaderSrc.empty() || fragmentShaderSrc.empty())
+        if (vertexSrc.empty() || fragmentSrc.empty())
             return nullptr;
 
-        GLuint vertexShaderID = CompileShader(GL_VERTEX_SHADER, vertexShaderSrc);
-        GLuint fragmentShaderID = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSrc);
+        GLuint vertexID = CompileShader(GL_VERTEX_SHADER, vertexSrc);
+        GLuint fragmentID = CompileShader(GL_FRAGMENT_SHADER, fragmentSrc);
     
-        if (vertexShaderID == 0 || fragmentShaderID == 0)
+        if (vertexID == 0 || fragmentID == 0)
             return nullptr;
 
-        const GLuint programID = LinkProgram(vertexShaderID, fragmentShaderID);
+        const GLuint programID = LinkProgram(vertexID, fragmentID);
     
-        glDeleteShader(vertexShaderID);
-        glDeleteShader(fragmentShaderID);
+        glDeleteShader(vertexID);
+        glDeleteShader(fragmentID);
+
+        if (!programID) return nullptr;
+
+        auto shader = std::make_shared<Shader>(programID);
+
+        Add(name, shader);
+
+        Logger::Info("Shader '{}' loaded successfully! (ID = {})", name, programID);
+
+        return shader;
+    }
+
+    std::shared_ptr<Shader> ShaderManager::LoadFromSource(const std::string& name,
+        const std::string& vertexSrc, const std::string& fragmentSrc)
+    {
+        LoggerContext ctx("ShaderManager", "Load");
+
+        if (Has(name))
+        {
+            Logger::Error("Shader with name '{}' already exists!", name);
+            return Get(name);
+        }
+
+        if (vertexSrc.empty() || fragmentSrc.empty())
+        {
+            Logger::Error("Invalid parameters! Shader source can't be empty!");
+            return nullptr;
+        }
+
+        Logger::Info("Loading shader '{}' from source...", name);
+
+        GLuint vertexID = CompileShader(GL_VERTEX_SHADER, vertexSrc);
+        GLuint fragmentID = CompileShader(GL_FRAGMENT_SHADER, fragmentSrc);
+
+        if (vertexID == 0 || fragmentID == 0)
+            return nullptr;
+
+        const GLuint programID = LinkProgram(vertexID, fragmentID);
+    
+        glDeleteShader(vertexID);
+        glDeleteShader(fragmentID);
 
         if (!programID) return nullptr;
 
@@ -77,6 +118,10 @@ namespace AE
 
     static GLuint CompileShader(GLenum type, const std::string& source)
     {
+        const std::string typeStr = type == GL_VERTEX_SHADER ? "Vertex" : "Fragment";
+        
+        Logger::Debug("Compiling {} shader...", typeStr);
+        
         GLuint shader = glCreateShader(type);
         const char* src = source.c_str();
         glShaderSource(shader, 1, &src, nullptr);
@@ -91,17 +136,21 @@ namespace AE
             std::string infoLog(logLength, '\0');
             glGetShaderInfoLog(shader, logLength, nullptr, infoLog.data());
             
-            Logger::Error("{} shader compilation failed: {}", type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", infoLog);
+            Logger::Error("{} shader compilation failed: {}", typeStr, infoLog);
             
             glDeleteShader(shader);
             return 0;
         }
+
+        Logger::Debug("{} shader compiled! (ID = {})", typeStr, shader);
     
         return shader;
     }
     
     static GLuint LinkProgram(GLuint vertexShader, GLuint fragmentShader)
     {
+        Logger::Debug("Linking shader program...");
+
         GLuint program = glCreateProgram();
         glAttachShader(program, vertexShader);
         glAttachShader(program, fragmentShader);
@@ -121,6 +170,8 @@ namespace AE
             glDeleteProgram(program);
             return 0;
         }
+
+        Logger::Debug("Shader program linked! (ID = {})", program);
     
         return program;
     }
