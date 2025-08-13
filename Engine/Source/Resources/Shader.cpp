@@ -3,6 +3,8 @@
 
 namespace AE
 {
+    GLuint Shader::_currentBoundShaderID = 0;
+
     Shader::Shader(GLuint id) : _id(id) {}
     
     Shader::~Shader()
@@ -13,12 +15,20 @@ namespace AE
     
     void Shader::Bind() const
     {
+        if (_currentBoundShaderID == _id)
+            return;
+
         glUseProgram(_id);
+        _currentBoundShaderID = _id;
     }
     
     void Shader::Unbind() const
     {
+        if (_currentBoundShaderID == 0)
+            return;
+        
         glUseProgram(0);
+        _currentBoundShaderID = 0;
     }
     
     GLuint Shader::GetID() const { return _id; }

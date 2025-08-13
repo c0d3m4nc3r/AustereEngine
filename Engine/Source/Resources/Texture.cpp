@@ -7,6 +7,8 @@
 
 namespace AE
 {
+    GLuint Texture::_currentBoundTexture[32] = { 0 };
+
     Texture::Texture(
         GLuint id,
         const TextureDesc& descriptor,
@@ -97,14 +99,24 @@ namespace AE
 
     void Texture::Bind(int slot) const
     {
+        if (_currentBoundTexture[slot] == _id)
+            return;
+        
         glActiveTexture(GL_TEXTURE0 + slot);
         glBindTexture(target, _id);
+
+        _currentBoundTexture[slot] = _id;
     }
 
     void Texture::Unbind(int slot) const
     {
+        if (_currentBoundTexture[slot] == 0)
+            return;
+
         glActiveTexture(GL_TEXTURE0 + slot);
         glBindTexture(target, 0);
+    
+        _currentBoundTexture[slot] = 0;
     }
 
     void Texture::Resize(int width, int height)
@@ -113,7 +125,7 @@ namespace AE
         glDeleteTextures(1, &_id);
 
         glGenTextures(1, &_id);
-        glBindTexture(target, _id);
+        Bind();
 
         const GLenum internalFormat = TextureUtils::GetInternalFormat(desc.channels);
         const GLenum format = TextureUtils::GetFormat(desc.channels);
@@ -136,8 +148,10 @@ namespace AE
         Bind();
         
         glGenerateMipmap(target);
+
         GLenum error = glGetError();
-        if (error != GL_NO_ERROR) {
+        if (error != GL_NO_ERROR)
+        {
             Logger::Error("OpenGL error: {}", error);
         }
 
@@ -193,6 +207,7 @@ namespace AE
     TextureFilter Texture::GetMagFilter() const { return desc.magFilter; }
     TextureWrap Texture::GetWrapS() const { return desc.wrapS; }
     TextureWrap Texture::GetWrapT() const { return desc.wrapT; }
+    TextureWrap Texture::GetWrapR() const { return desc.wrapR; }
 
     bool Texture::HasTransparency() const { return _hasTransparency; }
     bool Texture::HasMipmaps() const { return _hasMipmaps; }
@@ -202,28 +217,35 @@ namespace AE
     void Texture::SetMinFilter(TextureFilter filter)
     {
         desc.minFilter = filter;
-        glBindTexture(target, _id);
+        Bind();
         glTexParameteri(target, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(filter));
     }
 
     void Texture::SetMagFilter(TextureFilter filter)
     {
         desc.magFilter = filter;
-        glBindTexture(target, _id);
+        Bind();
         glTexParameteri(target, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(filter));
     }
 
     void Texture::SetWrapS(TextureWrap wrap)
     {
         desc.wrapS = wrap;
-        glBindTexture(target, _id);
+        Bind();
         glTexParameteri(target, GL_TEXTURE_WRAP_S, static_cast<GLint>(wrap));
     }
 
     void Texture::SetWrapT(TextureWrap wrap)
     {
         desc.wrapT = wrap;
-        glBindTexture(target, _id);
+        Bind();
+        glTexParameteri(target, GL_TEXTURE_WRAP_T, static_cast<GLint>(wrap));
+    }
+
+    void Texture::SetWrapR(TextureWrap wrap)
+    {
+        desc.wrapT = wrap;
+        Bind();
         glTexParameteri(target, GL_TEXTURE_WRAP_T, static_cast<GLint>(wrap));
     }
 

@@ -34,6 +34,8 @@ namespace AE
         GLuint _id;
     
         std::unordered_map<std::string, GLint> _uniforms;
+
+        static GLuint _currentBoundShaderID;
     
     };
 }

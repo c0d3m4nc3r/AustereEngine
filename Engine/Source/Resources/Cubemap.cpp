@@ -8,15 +8,7 @@ namespace AE
     Cubemap::Cubemap(
         GLuint id,
         const TextureDesc& descriptor
-    ) : _id(id), _desc(descriptor) {}
-
-    Cubemap::~Cubemap()
-    {
-        if (_id != 0)
-        {
-            glDeleteTextures(1, &_id);
-        }
-    }
+    ) : Texture(id, descriptor) {}
 
     std::shared_ptr<Cubemap> Cubemap::Create(const std::array<TextureData, 6> facesData)
     {
@@ -78,70 +70,19 @@ namespace AE
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
         GLenum error = glGetError();
-        if (error != GL_NO_ERROR) {
+        if (error != GL_NO_ERROR)
+        {
             Logger::Error("OpenGL error: {}", error);
         }
 
         return std::make_shared<Cubemap>(cubemapID, descriptor);
     }
 
-    void Cubemap::Bind() const
+    void Cubemap::AllocateStorage(int width, int height, GLenum internalFormat, GLenum format)
     {
-        glBindTexture(GL_TEXTURE_CUBE_MAP, _id);
+        for (GLuint face = 0; face < 6; ++face)
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, internalFormat, width, height, 0, format, desc.type, nullptr);
+        }
     }
-
-    void Cubemap::Unbind() const
-    {
-        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-    }
-
-    const TextureDesc& Cubemap::GetDescriptor() const { return _desc; }
-
-    GLuint Cubemap::GetID() const { return _id; }
-    int Cubemap::GetWidth() const { return _desc.width; }
-    int Cubemap::GetHeight() const { return _desc.height; }
-    int Cubemap::GetChannels() const { return _desc.channels; }
-    TextureFilter Cubemap::GetMinFilter() const { return _desc.minFilter; }
-    TextureFilter Cubemap::GetMagFilter() const { return _desc.magFilter; }
-    TextureWrap Cubemap::GetWrapS() const { return _desc.wrapS; }
-    TextureWrap Cubemap::GetWrapT() const { return _desc.wrapT; }
-    TextureWrap Cubemap::GetWrapR() const { return _desc.wrapR; }
-
-    bool Cubemap::IsValid() const { return _id != 0; }
-
-    void Cubemap::SetMinFilter(TextureFilter filter)
-    {
-        _desc.minFilter = filter;
-        glBindTexture(GL_TEXTURE_2D, _id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(filter));
-    }
-
-    void Cubemap::SetMagFilter(TextureFilter filter)
-    {
-        _desc.magFilter = filter;
-        glBindTexture(GL_TEXTURE_2D, _id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(filter));
-    }
-
-    void Cubemap::SetWrapS(TextureWrap wrap)
-    {
-        _desc.wrapS = wrap;
-        glBindTexture(GL_TEXTURE_2D, _id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(wrap));
-    }
-
-    void Cubemap::SetWrapT(TextureWrap wrap)
-    {
-        _desc.wrapT = wrap;
-        glBindTexture(GL_TEXTURE_2D, _id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(wrap));
-    }
-
-    void Cubemap::SetWrapR(TextureWrap wrap)
-    {
-        _desc.wrapR = wrap;
-        glBindTexture(GL_TEXTURE_2D, _id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, static_cast<GLint>(wrap));
-    }
-
 }

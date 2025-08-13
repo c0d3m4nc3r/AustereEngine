@@ -2,11 +2,12 @@
 
 #include "PCH.hpp"
 
+#include "Resources/Texture.hpp"
 #include "Common/TextureCommon.hpp"
 
 namespace AE
 {
-    class Cubemap
+    class Cubemap : public Texture
     {
     public:
         
@@ -15,37 +16,11 @@ namespace AE
             const TextureDesc& descriptor = TextureDesc()
         );
 
-        ~Cubemap();
-
         static std::shared_ptr<Cubemap> Create(const std::array<TextureData, 6> facesData);
 
-        void Bind() const;
-        void Unbind() const;
+    protected:
 
-        const TextureDesc& GetDescriptor() const;
-
-        GLuint GetID() const;
-        int GetWidth() const;
-        int GetHeight() const;
-        int GetChannels() const;
-        TextureFilter GetMinFilter() const;
-        TextureFilter GetMagFilter() const;
-        TextureWrap GetWrapS() const;
-        TextureWrap GetWrapT() const;
-        TextureWrap GetWrapR() const;
-
-        bool IsValid() const;
-
-        void SetMinFilter(TextureFilter filter);
-        void SetMagFilter(TextureFilter filter);
-        void SetWrapS(TextureWrap wrap);
-        void SetWrapT(TextureWrap wrap);
-        void SetWrapR(TextureWrap wrap);
-
-    private:
-
-        GLuint _id;
-        TextureDesc _desc;
+        void AllocateStorage(int width, int height, GLenum internalFormat, GLenum format) override;
 
     };
 }

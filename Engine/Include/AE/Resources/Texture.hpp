@@ -39,6 +39,7 @@ namespace AE
         TextureFilter GetMagFilter() const;
         TextureWrap GetWrapS() const;
         TextureWrap GetWrapT() const;
+        TextureWrap GetWrapR() const;
 
         bool HasTransparency() const;
         bool HasMipmaps() const;
@@ -49,6 +50,7 @@ namespace AE
         void SetMagFilter(TextureFilter filter);
         void SetWrapS(TextureWrap wrap);
         void SetWrapT(TextureWrap wrap);
+        void SetWrapR(TextureWrap wrap);
 
     protected:
 
@@ -61,5 +63,7 @@ namespace AE
         GLuint _id;
         bool _hasMipmaps = false;
         bool _hasTransparency = false;
+
+        static GLuint _currentBoundTexture[32];
     };
 }
