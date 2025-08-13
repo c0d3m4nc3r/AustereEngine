@@ -4,6 +4,7 @@
 #include "Rendering/Material.hpp"
 #include "Resources/Shader.hpp"
 #include "Resources/Model.hpp"
+#include "Resources/Cubemap.hpp"
 #include "Lighting/Manager.hpp"
 #include "World/Skybox.hpp"
 #include "Core/EngineSettings.hpp"
