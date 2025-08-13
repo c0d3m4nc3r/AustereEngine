@@ -13,8 +13,10 @@ namespace AE
 {
     namespace fs = std::filesystem;
     
-    ModelManager::ModelManager(TextureManager* textureMgr)
-        : ResourceManager("Model"), _textureMgr(textureMgr) {}
+    ModelManager::ModelManager(TextureManager* textureMgr, ShaderManager* shaderMgr)
+        : ResourceManager("Model"),
+          _textureMgr(textureMgr),
+          _shaderMgr(shaderMgr) {}
 
     std::shared_ptr<Model> ModelManager::Load(const std::string& name,
         const std::string& path)
@@ -70,7 +72,7 @@ namespace AE
     {
         LoggerContext ctx("ModelManager", "_ProcessNode");
 
-        Logger::Debug("Processing node '{}' with {} meshes and {} children...", node->mName.C_Str(), node->mNumMeshes, node->mNumChildren);
+        // Logger::Debug("Processing node '{}' with {} meshes and {} children...", node->mName.C_Str(), node->mNumMeshes, node->mNumChildren);
 
         for (unsigned int i = 0; i < node->mNumMeshes; ++i)
         {
@@ -100,7 +102,7 @@ namespace AE
     {
         LoggerContext ctx("ModelManager", "_ProcessMesh");
 
-        Logger::Debug("Processing mesh '{}' with {} vertices and {} faces...", mesh->mName.C_Str(), mesh->mNumVertices, mesh->mNumFaces);
+        // Logger::Debug("Processing mesh '{}' with {} vertices and {} faces...", mesh->mName.C_Str(), mesh->mNumVertices, mesh->mNumFaces);
 
         std::vector<glm::vec3> vertices;
         std::vector<unsigned int> indices;
@@ -185,16 +187,16 @@ namespace AE
             shininess = 32.0f;
         }
 
-        auto material = std::make_shared<Material>(ambient, diffuse, specular, shininess);
+        auto material = std::make_shared<Material>(_shaderMgr->GetStandardShader(), ambient, diffuse, specular, shininess);
 
-        for (int type = aiTextureType_NONE + 1; type <= aiTextureType_REFLECTION; ++type)
-        {
-            unsigned int count = aiMat->GetTextureCount(static_cast<aiTextureType>(type));
-            if (count > 0)
-            {
-                Logger::Debug("Material '{}' has {} texture(s) of type {}", aiMat->GetName().C_Str(), count, TextureTypeToString(static_cast<aiTextureType>(type)));
-            }
-        }
+        // for (int type = aiTextureType_NONE + 1; type <= aiTextureType_REFLECTION; ++type)
+        // {
+        //     unsigned int count = aiMat->GetTextureCount(static_cast<aiTextureType>(type));
+        //     if (count > 0)
+        //     {
+        //         Logger::Debug("Material '{}' has {} texture(s) of type {}", aiMat->GetName().C_Str(), count, TextureTypeToString(static_cast<aiTextureType>(type)));
+        //     }
+        // }
 
         auto LoadAndSetTexture = [&](aiTextureType type, auto setter)
         {

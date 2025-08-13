@@ -9,6 +9,8 @@ namespace AE
     {
         if (!root)
             _root = std::make_shared<SceneNode>("Root");
+        else
+            _root = root;
     }
 
     Scene::~Scene()

@@ -23,6 +23,24 @@ namespace AE
             const std::string& fragmentSrc
         );
 
+        std::shared_ptr<Shader> GetBuiltinShader(const std::string& name);
+
+        std::shared_ptr<Shader> GetStandardShader() const;
+        std::shared_ptr<Shader> GetSkyboxShader() const;
+
+        void SetStandardShader(std::shared_ptr<Shader> shader);
+        void SetSkyboxShader(std::shared_ptr<Shader> shader);
+
+    private:
+
+        std::shared_ptr<Shader> _standardShader;
+        std::shared_ptr<Shader> _skyboxShader;
+
+        std::unordered_map<std::string, std::shared_ptr<Shader>> _builtinShaders;
+
+        bool _LoadBuiltinShaders();
+
+        friend class Engine;
     };
 
     class Texture;
@@ -66,7 +84,7 @@ namespace AE
     {
     public:
 
-        ModelManager(TextureManager* textureMgr);
+        ModelManager(TextureManager* textureMgr, ShaderManager* shaderMgr);
 
         std::shared_ptr<Model> Load(const std::string& name,
             const std::string& path
@@ -79,6 +97,7 @@ namespace AE
         std::string _currentModelName;
 
         TextureManager* _textureMgr;
+        ShaderManager* _shaderMgr;
 
         void _ProcessNode(aiNode* node, const aiScene* scene, const std::shared_ptr<ModelNode>& parent);
         std::shared_ptr<Mesh> _ProcessMesh(aiMesh* mesh, const aiScene* scene);

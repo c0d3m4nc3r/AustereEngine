@@ -19,26 +19,24 @@ namespace AE
     };
     
     class LightManager;
+    class ShaderManager;
     class Renderer
     {
     public:
     
-        Renderer(LightManager* lightMgr = nullptr);
+        Renderer(LightManager* lightMgr, ShaderManager* shaderMgr);
         ~Renderer();
     
-        void SubmitMesh(Mesh* mesh, Shader* shader, Material* material = nullptr, const glm::mat4& transform = glm::mat4(1.0f));
-        void SubmitModel(Model* model, Shader* shader, const glm::mat4& transform = glm::mat4(1.0f));
-        void SubmitModelNode(ModelNode* node, Shader* shader, const glm::mat4& parentTransform = glm::mat4(1.0f));
+        void SubmitMesh(Mesh* mesh, Material* material = nullptr, const glm::mat4& transform = glm::mat4(1.0f));
+        void SubmitModel(Model* model, const glm::mat4& transform = glm::mat4(1.0f));
+        void SubmitModelNode(ModelNode* node, const glm::mat4& parentTransform = glm::mat4(1.0f));
+        void SubmitSkybox(Skybox* skybox);
 
         RenderMode GetRenderMode() const;
         void SetRenderMode(RenderMode mode);
     
         std::shared_ptr<Camera> GetCamera() const;
         void SetCamera(std::shared_ptr<Camera> camera);
-   
-        std::shared_ptr<Skybox> GetSkybox() const;
-        void SetSkybox(std::shared_ptr<Skybox> skybox);
-        void SetSkyboxShader(std::shared_ptr<Shader> shader);
         
         bool IsInitialized() const;
     
@@ -46,7 +44,6 @@ namespace AE
     
         struct RenderBatch
         {
-            Shader* shader;
             const Material* material;
     
             struct InstanceData
@@ -58,17 +55,16 @@ namespace AE
             std::vector<InstanceData> instances;
         };
 
-        LightManager* _lightMgr;
+        LightManager* _lightMgr = nullptr;
+        ShaderManager* _shaderMgr = nullptr;
     
         RenderMode _renderMode = RenderMode::Default;
         
         std::vector<RenderBatch> _opaqueBatches;
         std::vector<RenderBatch> _transparentBatches;
+        Skybox* _submittedSkybox = nullptr;
     
         std::shared_ptr<Camera> _camera;
-
-        std::shared_ptr<Skybox> _skybox;
-        std::shared_ptr<Shader> _skyboxShader;
     
         struct RendererState
         {

@@ -137,23 +137,29 @@ namespace AE
             return false;
         }
 
+        _shaderMgr = std::make_unique<ShaderManager>();
+        if (!_shaderMgr->_LoadBuiltinShaders())
+        {
+            Logger::Error("Failed to load built-in shaders! Aborting...");
+            return false;
+        }
+
         _lightMgr = std::make_unique<LightManager>();
 
-        _renderer = std::make_unique<Renderer>(_lightMgr.get());
+        _renderer = std::make_unique<Renderer>(_lightMgr.get(), _shaderMgr.get());
         if (!_renderer->_Initialize())
         {
             Logger::Error("Renderer initialization failed! Aborting...");
             return false;
         }
 
+        _cubemapMgr = std::make_unique<CubemapManager>();
+        _textureMgr = std::make_unique<TextureManager>();
+        _modelMgr = std::make_unique<ModelManager>(_textureMgr.get(), _shaderMgr.get());
+        
         _inputMgr = std::make_unique<InputManager>(_window.get());
         _sceneMgr = std::make_unique<SceneManager>(this);
 
-        _shaderMgr = std::make_unique<ShaderManager>();
-        _textureMgr = std::make_unique<TextureManager>();
-        _cubemapMgr = std::make_unique<CubemapManager>();
-        _modelMgr = std::make_unique<ModelManager>(_textureMgr.get());
-        
         _state.initialized = true;
         
         Logger::Info("Engine initialized!");

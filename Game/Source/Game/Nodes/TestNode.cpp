@@ -8,32 +8,27 @@
 
 bool TestNode::OnInitialize()
 {
-    AE::ShaderManager* shaderMgr = engine->GetShaderManager();
     AE::ModelManager* modelMgr = engine->GetModelManager();
-    
-    mainShader = shaderMgr->Get("Main");
-    if (!mainShader) return false;
 
-    testModel = modelMgr->Load("SponzaAtrium",
+    _testModel = modelMgr->Load("SponzaAtrium",
         "Assets/Models/SponzaAtrium3.glb"
     );
 
-    if (!testModel) return false;
+    if (!_testModel) return false;
     
     return true;
 }
 
 void TestNode::OnDestroy()
 {
-    mainShader.reset();
-    testModel.reset();
+    _testModel.reset();
 }
 
 void TestNode::OnRender()
 {
     AE::Renderer* renderer = engine->GetRenderer();
     
-    renderer->SubmitModel(testModel.get(), mainShader.get(), transform.GetWorldMatrix());
+    renderer->SubmitModel(_testModel.get(), transform.GetWorldMatrix());
 }
 
 void TestNode::OnUpdate()

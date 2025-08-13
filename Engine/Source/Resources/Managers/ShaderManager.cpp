@@ -1,5 +1,6 @@
 #include "Resources/Managers.hpp"
 #include "Resources/Shader.hpp"
+#include "Resources/Builtin/Shaders.hpp"
 
 #include <fstream>
 
@@ -74,7 +75,7 @@ namespace AE
 
         if (vertexSrc.empty() || fragmentSrc.empty())
         {
-            Logger::Error("Invalid parameters! Shader source can't be empty!");
+            Logger::Error("Invalid parameters! Shader source cannot be empty!");
             return nullptr;
         }
 
@@ -100,6 +101,63 @@ namespace AE
         Logger::Info("Shader '{}' loaded successfully! (ID = {})", name, programID);
 
         return shader;
+    }
+
+    std::shared_ptr<Shader> ShaderManager::GetBuiltinShader(const std::string& name)
+    {
+        auto it = _builtinShaders.find(name);
+        if (it == _builtinShaders.end())
+            return nullptr;
+        
+        return it->second;
+    }
+
+    std::shared_ptr<Shader> ShaderManager::GetStandardShader() const { return _standardShader; }
+    std::shared_ptr<Shader> ShaderManager::GetSkyboxShader() const { return _skyboxShader; }
+
+    void ShaderManager::SetStandardShader(std::shared_ptr<Shader> shader)
+    {
+        _standardShader = shader;
+    }
+    void ShaderManager::SetSkyboxShader(std::shared_ptr<Shader> shader)
+    {
+        _skyboxShader = shader;
+    }
+
+    bool ShaderManager::_LoadBuiltinShaders()
+    {
+        LoggerContext ctx("ShaderManager", "_LoadBuiltinShaders");
+
+        Logger::Info("Loading built-in shaders...");
+
+        _standardShader = LoadFromSource("Standard",
+            Builtin::Shaders::standardVertex,
+            Builtin::Shaders::standardFragment
+        );
+
+        if (!_standardShader)
+        {
+            Logger::Error("Failed to load built-in standard shader!");
+            return false;
+        }
+
+        _skyboxShader = LoadFromSource("Skybox",
+            Builtin::Shaders::skyboxVertex,
+            Builtin::Shaders::skyboxFragment
+        );
+        
+        if (!_skyboxShader)
+        {
+            Logger::Error("Failed to load built-in skybox shader!");
+            return false;
+        }
+
+        _builtinShaders["Standard"] = _standardShader;
+        _builtinShaders["Skybox"] = _skyboxShader;
+
+        Logger::Info("Built-in shaders loaded!");
+
+        return true;
     }
 
     static std::string ReadFile(const std::string& path)

@@ -14,11 +14,13 @@ namespace AE
     };
 
     Material::Material(
+        std::shared_ptr<Shader> shader,
         const Color& ambientColor,
         const Color& diffuseColor,
         const Color& specularColor,
         float shininess
-    ) : _ambientColor(ambientColor),
+    ) : _shader(shader),
+        _ambientColor(ambientColor),
         _diffuseColor(diffuseColor),
         _specularColor(specularColor),
         _shininess(shininess)
@@ -26,60 +28,60 @@ namespace AE
 
     Material::~Material() {}
 
-    void Material::Apply(Shader* shader, const std::string& uniformName) const
+    void Material::Apply(const std::string& uniformName) const
     {
-        if (shader == nullptr) return;
+        if (_shader == nullptr) return;
+        
+        _shader->Bind();
 
-        shader->Bind();
-
-        shader->SetVec3(uniformName + ".ambientColor", _ambientColor.ToVec3());
-        shader->SetVec3(uniformName + ".diffuseColor", _diffuseColor.ToVec3());
-        shader->SetVec3(uniformName + ".specularColor", _specularColor.ToVec3());
-        shader->SetFloat(uniformName + ".shininess", _shininess);
+        _shader->SetVec3(uniformName + ".ambientColor", _ambientColor.ToVec3());
+        _shader->SetVec3(uniformName + ".diffuseColor", _diffuseColor.ToVec3());
+        _shader->SetVec3(uniformName + ".specularColor", _specularColor.ToVec3());
+        _shader->SetFloat(uniformName + ".shininess", _shininess);
 
         // Diffuse
         if (HasDiffuseTexture() && _diffuseTexture->IsValid()) {
             _diffuseTexture->Bind(0);
-            shader->SetInt(uniformName + ".diffuseTexture", DIFFUSE_TEXTURE_SLOT);
-            shader->SetBool(uniformName + ".hasDiffuseTexture", true);
+            _shader->SetInt(uniformName + ".diffuseTexture", DIFFUSE_TEXTURE_SLOT);
+            _shader->SetBool(uniformName + ".hasDiffuseTexture", true);
         } else {
-            shader->SetBool(uniformName + ".hasDiffuseTexture", false);
+            _shader->SetBool(uniformName + ".hasDiffuseTexture", false);
         }
 
         // Specular
         if (HasSpecularTexture() && _specularTexture->IsValid()) {
             _specularTexture->Bind(1);
-            shader->SetInt(uniformName + ".specularTexture", SPECULAR_TEXTURE_SLOT);
-            shader->SetBool(uniformName + ".hasSpecularTexture", true);
+            _shader->SetInt(uniformName + ".specularTexture", SPECULAR_TEXTURE_SLOT);
+            _shader->SetBool(uniformName + ".hasSpecularTexture", true);
         } else {
-            shader->SetBool(uniformName + ".hasSpecularTexture", false);
+            _shader->SetBool(uniformName + ".hasSpecularTexture", false);
         }
 
         // Emissive
         if (HasEmissiveTexture() && _emissiveTexture->IsValid()) {
             _emissiveTexture->Bind(2);
-            shader->SetInt(uniformName + ".emissiveTexture", EMISSIVE_TEXTURE_SLOT);
-            shader->SetBool(uniformName + ".hasEmissiveTexture", true);
+            _shader->SetInt(uniformName + ".emissiveTexture", EMISSIVE_TEXTURE_SLOT);
+            _shader->SetBool(uniformName + ".hasEmissiveTexture", true);
         } else {
-            shader->SetBool(uniformName + ".hasEmissiveTexture", false);
+            _shader->SetBool(uniformName + ".hasEmissiveTexture", false);
         }
 
         // Normal
         if (HasNormalTexture() && _normalTexture->IsValid()) {
             _normalTexture->Bind(3);
-            shader->SetInt(uniformName + ".normalTexture", NORMAL_TEXTURE_SLOT);
-            shader->SetBool(uniformName + ".hasNormalTexture", true);
+            _shader->SetInt(uniformName + ".normalTexture", NORMAL_TEXTURE_SLOT);
+            _shader->SetBool(uniformName + ".hasNormalTexture", true);
         } else {
-            shader->SetBool(uniformName + ".hasNormalTexture", false);
+            _shader->SetBool(uniformName + ".hasNormalTexture", false);
         }
 
         // Opacity
         if (HasOpacityTexture() && _opacityTexture->IsValid()) {
             _opacityTexture->Bind(4);
-            shader->SetInt(uniformName + ".opacityTexture", OPACITY_TEXTURE_SLOT);
-            shader->SetBool(uniformName + ".hasOpacityTexture", true);
+            _shader->SetInt(uniformName + ".opacityTexture", OPACITY_TEXTURE_SLOT);
+            _shader->SetBool(uniformName + ".hasOpacityTexture", true);
         } else {
-            shader->SetBool(uniformName + ".hasOpacityTexture", false);
+            _shader->SetBool(uniformName + ".hasOpacityTexture", false);
         }
     }
 
@@ -99,6 +101,8 @@ namespace AE
     std::shared_ptr<Texture> Material::GetEmissiveTexture() const { return _emissiveTexture; }
     std::shared_ptr<Texture> Material::GetNormalTexture() const { return _normalTexture; }
     std::shared_ptr<Texture> Material::GetOpacityTexture() const { return _opacityTexture; }
+
+    std::shared_ptr<Shader> Material::GetShader() const { return _shader; }
 
     bool Material::HasDiffuseTexture() const { return _diffuseTexture != nullptr; }
     bool Material::HasSpecularTexture() const { return _specularTexture != nullptr; }
@@ -124,4 +128,6 @@ namespace AE
     void Material::SetEmissiveTexture(std::shared_ptr<Texture> texture) { _emissiveTexture = texture; }
     void Material::SetNormalTexture(std::shared_ptr<Texture> texture) { _normalTexture = texture; }
     void Material::SetOpacityTexture(std::shared_ptr<Texture> texture) { _opacityTexture = texture; }
+
+    void Material::SetShader(std::shared_ptr<Shader> shader) { _shader = shader; }
 }

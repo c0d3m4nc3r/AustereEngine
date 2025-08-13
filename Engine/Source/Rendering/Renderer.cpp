@@ -2,7 +2,9 @@
 #include "Rendering/Mesh.hpp"
 #include "Rendering/Camera.hpp"
 #include "Rendering/Material.hpp"
+#include "Resources/Managers.hpp"
 #include "Resources/Shader.hpp"
+#include "Resources/Cubemap.hpp"
 #include "Resources/Model.hpp"
 #include "Resources/Cubemap.hpp"
 #include "Lighting/Manager.hpp"
@@ -15,10 +17,13 @@
 
 namespace AE
 {
-    Renderer::Renderer(LightManager* lightMgr)
+    Renderer::Renderer(LightManager* lightMgr, ShaderManager* shaderMgr)
     {
         assert(lightMgr != nullptr);
+        assert(shaderMgr != nullptr);
+
         _lightMgr = lightMgr;
+        _shaderMgr = shaderMgr;
     }
     
     Renderer::~Renderer()
@@ -31,9 +36,9 @@ namespace AE
         }
     }
     
-    void Renderer::SubmitMesh(Mesh* mesh, Shader* shader, Material* material, const glm::mat4& transform)
+    void Renderer::SubmitMesh(Mesh* mesh, Material* material, const glm::mat4& transform)
     {
-        if (!mesh || !shader) return;
+        if (!mesh) return;
 
         if (_camera)
         {
@@ -44,31 +49,33 @@ namespace AE
         }
     
         const Material* mat = material ? material : Material::GetDefault();
+        if (mat->GetShader() == nullptr)
+            return;
 
         auto& batches = material->IsTransparent() ? _transparentBatches : _opaqueBatches;
     
         for (RenderBatch& batch : batches)
         {
-            if (batch.shader == shader && batch.material == mat)
+            if (batch.material == mat)
             {
                 batch.instances.emplace_back(RenderBatch::InstanceData{mesh, transform});
                 return;
             }
         }
     
-        batches.emplace_back(RenderBatch{shader, mat, {{mesh, transform}}});
+        batches.emplace_back(RenderBatch{mat, {{mesh, transform}}});
     }
 
-    void Renderer::SubmitModel(Model* model, Shader* shader, const glm::mat4& transform)
+    void Renderer::SubmitModel(Model* model, const glm::mat4& transform)
     {
-        if (!model || !shader) return;
+        if (!model) return;
 
-        SubmitModelNode(model->root.get(), shader, transform);
+        SubmitModelNode(model->root.get(), transform);
     }
 
-    void Renderer::SubmitModelNode(ModelNode* node, Shader* shader, const glm::mat4& parentTransform)
+    void Renderer::SubmitModelNode(ModelNode* node, const glm::mat4& parentTransform)
     {
-        if (!node || !shader) return;
+        if (!node) return;
 
         glm::mat4 globalTransform = parentTransform * node->GetTransform();
 
@@ -78,11 +85,16 @@ namespace AE
         for (size_t i = 0; i < node->GetMeshesCount(); ++i)
         {
             Material* material = (i < node->GetMaterialsCount()) ? materials[i].get() : nullptr;
-            SubmitMesh(meshes[i].get(), shader, material, globalTransform);
+            SubmitMesh(meshes[i].get(), material, globalTransform);
         }
 
         for (auto child : node->GetChildren())
-            SubmitModelNode(child.get(), shader, globalTransform);
+            SubmitModelNode(child.get(), globalTransform);
+    }
+
+    void Renderer::SubmitSkybox(Skybox* skybox)
+    {
+        _submittedSkybox = skybox;
     }
 
     RenderMode Renderer::GetRenderMode() const { return _renderMode; }
@@ -90,10 +102,6 @@ namespace AE
     
     std::shared_ptr<Camera> Renderer::GetCamera() const { return _camera; }
     void Renderer::SetCamera(std::shared_ptr<Camera> camera) { _camera = camera; }
-
-    std::shared_ptr<Skybox> Renderer::GetSkybox() const { return _skybox; }
-    void Renderer::SetSkybox(std::shared_ptr<Skybox> skybox) { _skybox = skybox; }
-    void Renderer::SetSkyboxShader(std::shared_ptr<Shader> shader) { _skyboxShader = shader; }
     
     bool Renderer::IsInitialized() const { return _state.initialized; }
     
@@ -127,13 +135,12 @@ namespace AE
             Logger::Error("Renderer is not initialized! Aborting...");
             return;
         }
-    
-        _skybox.reset();
-        _skyboxShader.reset();
+        
         _camera.reset();
 
         _opaqueBatches.clear();
         _transparentBatches.clear();
+        _submittedSkybox = nullptr;
     
         _state.initialized = false;
     
@@ -142,9 +149,9 @@ namespace AE
     
     void Renderer::_RenderBatch(const RenderBatch& batch)
     {
-        if (!batch.shader) return;
+        if (!batch.material) return;
     
-        Shader* shader = batch.shader;
+        Shader* shader = batch.material->GetShader().get();
         shader->Bind();
         
         if (_camera) {
@@ -160,7 +167,7 @@ namespace AE
         shader->SetInt("u_RenderMode", static_cast<int>(_renderMode));
         
         if (batch.material)
-            batch.material->Apply(shader);
+            batch.material->Apply();
         
         if (_lightMgr)
             _lightMgr->Apply(shader);
@@ -170,39 +177,45 @@ namespace AE
             shader->SetMat4("u_ModelMatrix", instance.transform);
             instance.mesh->Draw();
         }
-    
-        shader->Unbind();
     }
 
     void Renderer::_RenderSkybox()
     {
-        if (!_skybox || !_skyboxShader || !_camera) return;
+        if (!_submittedSkybox) return;
+        
+        Shader* shader = _shaderMgr->GetSkyboxShader().get();
+        if (!shader) return;
     
-        _skyboxShader->Bind();
+        shader->Bind();
 
-        glm::mat4 view = glm::mat4(glm::mat3(_camera->GetViewMatrix()));
-        glm::mat4 projection = _camera->GetProjectionMatrix();
+        glm::mat4 view, projection;
+
+        if (_camera) {
+            view = glm::mat4(glm::mat3(_camera->GetViewMatrix()));
+            projection = _camera->GetProjectionMatrix();
+        } else {
+            view = glm::mat4(glm::mat3(1.0f));
+            projection = glm::mat4(1.0f);
+        }
 
         glDepthMask(GL_FALSE);
         glDepthFunc(GL_LEQUAL);
         glDisable(GL_CULL_FACE);
         
-        _skybox->cubemap->Bind();
+        _submittedSkybox->cubemap->Bind();
 
-        _skyboxShader->SetMat4("u_ViewMatrix", view);
-        _skyboxShader->SetMat4("u_ProjectionMatrix", projection);
-        _skyboxShader->SetInt("u_Cubemap", 0);
+        shader->SetMat4("u_ViewMatrix", view);
+        shader->SetMat4("u_ProjectionMatrix", projection);
+        shader->SetInt("u_Cubemap", 0);
 
-        _skybox->mesh->Draw();
+        _submittedSkybox->mesh->Draw();
 
-        _skybox->cubemap->Unbind();
+        _submittedSkybox->cubemap->Unbind();
 
         glDepthMask(GL_TRUE);
         glDepthFunc(GL_LESS);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-
-        _skyboxShader->Unbind();
     }
     
     void Renderer::_RenderOpaqueBatches()
@@ -216,7 +229,13 @@ namespace AE
 
     void Renderer::_RenderTransparentBatches()
     {
-        const glm::vec3& camPos = _camera->transform.GetWorldPosition();
+        glm::vec3 camPos;
+        if (_camera)
+        {
+            camPos = _camera->transform.GetWorldPosition();
+        } else {
+            camPos = glm::vec3(0.0f);
+        }
 
         std::sort(_transparentBatches.begin(), _transparentBatches.end(),
             [&camPos](const RenderBatch& a, const RenderBatch& b)
@@ -279,6 +298,8 @@ namespace AE
 
         _transparentBatches.clear();
         _transparentBatches.reserve(128);
+
+        _submittedSkybox = nullptr;
     }
     
     void Renderer::_RenderFrame()
@@ -297,6 +318,5 @@ namespace AE
         _RenderOpaqueBatches();
         _RenderSkybox();
         _RenderTransparentBatches();
-
     }
 }

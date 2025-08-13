@@ -1,12 +1,12 @@
 #pragma once
 
 #include <AE/Scene/Node.hpp>
+#include <AE/World/Skybox.hpp>
 
 namespace AE
 {
-    class Shader;
-    class Model;
     class Camera;
+    class Model;
 }
 
 class CameraNode : public AE::SceneNode
@@ -36,12 +36,29 @@ public:
     
     TestNode(const std::string& name = "TestNode")
         : AE::SceneNode(name) {}
-
-    std::shared_ptr<AE::Shader> mainShader;
-    std::shared_ptr<AE::Model> testModel;
-
+    
     bool OnInitialize() override;
     void OnDestroy() override;
     void OnUpdate() override;
     void OnRender() override;
+
+private:
+    std::shared_ptr<AE::Model> _testModel;
+};
+
+class TestSceneRoot : public AE::SceneNode
+{
+public:
+
+    TestSceneRoot(const std::string& name = "Root")
+        : AE::SceneNode(name) {}
+    
+    bool OnInitialize() override;
+    void OnDestroy() override;
+    void OnRender() override;
+    
+private:
+
+    std::shared_ptr<CameraNode> _cameraNode;
+    std::unique_ptr<AE::Skybox> _skybox;
 };
