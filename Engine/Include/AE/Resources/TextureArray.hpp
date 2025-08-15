@@ -12,7 +12,7 @@ namespace AE
         
         TextureArray(GLuint id, const TextureDesc& desc, int layers);
 
-        static std::shared_ptr<TextureArray> Create(const TextureDesc& desc, int layers);
+        static SPtr<TextureArray> Create(const TextureDesc& desc, int layers);
 
         int GetLayerCount() const;
         

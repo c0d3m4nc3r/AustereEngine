@@ -29,25 +29,25 @@ namespace AE
 
         struct ColorAttachment
         {
-            std::shared_ptr<Texture> texture;
+            SPtr<Texture> texture;
             GLenum slot = 0;
         };
 
         struct ColorArrayAttachment
         {
-            std::shared_ptr<TextureArray> textureArray;
+            SPtr<TextureArray> textureArray;
             GLenum slot = 0;
             int layer = 0;
         };
 
         struct DepthAttachment
         {
-            std::shared_ptr<Texture> texture;
+            SPtr<Texture> texture;
         };
 
         struct DepthArrayAttachment
         {
-            std::shared_ptr<TextureArray> textureArray;
+            SPtr<TextureArray> textureArray;
             int layer = 0;
         };
 
@@ -60,18 +60,18 @@ namespace AE
         // Framebuffer(Framebuffer&& other) noexcept;
         // Framebuffer& operator=(Framebuffer&& other) noexcept;
 
-        static std::shared_ptr<Framebuffer> Create(int width, int height);
+        static SPtr<Framebuffer> Create(int width, int height);
 
         void Bind() const;
         void Unbind() const;
 
         void Resize(int width, int height);
 
-        void AttachColorTexture(std::shared_ptr<Texture> texture, GLenum slot = 0);
-        void AttachColorTextureLayer(std::shared_ptr<TextureArray> textureArray, int layer, GLenum slot = 0);
+        void AttachColorTexture(SPtr<Texture> texture, GLenum slot = 0);
+        void AttachColorTextureLayer(SPtr<TextureArray> textureArray, int layer, GLenum slot = 0);
         
-        void AttachDepthTexture(std::shared_ptr<Texture> texture);
-        void AttachDepthTextureLayer(std::shared_ptr<TextureArray> textureArray, int layer);
+        void AttachDepthTexture(SPtr<Texture> texture);
+        void AttachDepthTextureLayer(SPtr<TextureArray> textureArray, int layer);
         void AttachDepthRenderbuffer();
 
         void DetachColor(GLenum color);
@@ -81,12 +81,12 @@ namespace AE
         int GetWidth() const;
         int GetHeight() const;
 
-        std::shared_ptr<Texture> GetColorTexture(GLenum slot = 0) const;
-        std::shared_ptr<TextureArray> GetColorTextureArray(GLenum slot = 0) const;
+        SPtr<Texture> GetColorTexture(GLenum slot = 0) const;
+        SPtr<TextureArray> GetColorTextureArray(GLenum slot = 0) const;
         int GetColorTextureLayer(GLenum slot = 0) const;
         
-        std::shared_ptr<Texture> GetDepthTexture() const;
-        std::shared_ptr<TextureArray> GetDepthTextureArray() const;
+        SPtr<Texture> GetDepthTexture() const;
+        SPtr<TextureArray> GetDepthTextureArray() const;
         int GetDepthTextureLayer() const;
 
         bool IsComplete() const;

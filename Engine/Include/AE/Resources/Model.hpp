@@ -14,15 +14,15 @@ namespace AE
         ModelNode(const std::string& name, const glm::mat4& transform = {1.0f});
         ~ModelNode() = default;
 
-        void AddMesh(const std::shared_ptr<Mesh>& mesh);
-        void AddMaterial(const std::shared_ptr<Material>& material);
+        void AddMesh(const SPtr<Mesh>& mesh);
+        void AddMaterial(const SPtr<Material>& material);
 
-        void AddChild(const std::shared_ptr<ModelNode>& child);
-        void RemoveChild(const std::shared_ptr<ModelNode>& child);
+        void AddChild(const SPtr<ModelNode>& child);
+        void RemoveChild(const SPtr<ModelNode>& child);
 
         const std::string& GetName() const;
         const glm::mat4& GetTransform() const;
-        std::shared_ptr<ModelNode> GetParent() const;
+        SPtr<ModelNode> GetParent() const;
 
         std::size_t GetMeshesCount() const;
         std::size_t GetMaterialsCount() const;
@@ -30,30 +30,30 @@ namespace AE
 
         void SetName(const std::string& name);
         void SetTransform(const glm::mat4& transform);
-        void SetParent(const std::shared_ptr<ModelNode>& parent);
+        void SetParent(const SPtr<ModelNode>& parent);
 
-        const std::vector<std::shared_ptr<Mesh>>& GetMeshes() const;
-        const std::vector<std::shared_ptr<Material>>& GetMaterials() const;
-        const std::vector<std::shared_ptr<ModelNode>>& GetChildren() const;
+        const std::vector<SPtr<Mesh>>& GetMeshes() const;
+        const std::vector<SPtr<Material>>& GetMaterials() const;
+        const std::vector<SPtr<ModelNode>>& GetChildren() const;
 
     private:
 
         std::string _name;
         glm::mat4 _transform;
-        std::weak_ptr<ModelNode> _parent;
+        WPtr<ModelNode> _parent;
         
-        std::vector<std::shared_ptr<Mesh>> _meshes;
-        std::vector<std::shared_ptr<Material>> _materials;
-        std::vector<std::shared_ptr<ModelNode>> _children;
+        std::vector<SPtr<Mesh>> _meshes;
+        std::vector<SPtr<Material>> _materials;
+        std::vector<SPtr<ModelNode>> _children;
     };
 
     class Model
     {
     public:
-        Model() : root(std::make_shared<ModelNode>("Root")) {}
+        Model() : root(MakeSPtr<ModelNode>("Root")) {}
         ~Model() = default;
     
-        std::shared_ptr<ModelNode> root;
+        SPtr<ModelNode> root;
 
     };
 }    

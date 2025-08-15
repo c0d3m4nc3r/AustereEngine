@@ -18,7 +18,7 @@ namespace AE
         
         virtual ~Texture();
 
-        static std::shared_ptr<Texture> Create(const TextureData& data, bool generateMipmaps = false);
+        static SPtr<Texture> Create(const TextureData& data, bool generateMipmaps = false);
 
         void Bind(int slot = 0) const;
         void Unbind(int slot = 0) const;
@@ -27,7 +27,7 @@ namespace AE
 
         void GenerateMipmaps();
 
-        static std::shared_ptr<Texture> GetDefault();
+        static SPtr<Texture> GetDefault();
 
         const TextureDesc& GetDescriptor() const;
 

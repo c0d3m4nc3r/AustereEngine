@@ -14,9 +14,9 @@ namespace AE
         SceneNode(const std::string& name);
         virtual ~SceneNode();
 
-        bool AddChild(std::shared_ptr<SceneNode> node);
+        bool AddChild(SPtr<SceneNode> node);
         bool RemoveChild(const std::string& name);
-        bool RemoveChild(const std::shared_ptr<SceneNode>& node);
+        bool RemoveChild(const SPtr<SceneNode>& node);
 
         const std::string& GetName() const;
 
@@ -24,16 +24,16 @@ namespace AE
         const Transform& GetTransform() const;
         void SetTransform(const Transform& transform);
 
-        std::shared_ptr<SceneNode> GetChild(const std::string& name) const;
+        SPtr<SceneNode> GetChild(const std::string& name) const;
         std::size_t GetChildrenCount() const;
 
-        std::shared_ptr<SceneNode> GetParent() const;
-        void SetParent(std::shared_ptr<SceneNode> node);
+        SPtr<SceneNode> GetParent() const;
+        void SetParent(SPtr<SceneNode> node);
         bool HasParent() const;
         
         bool HasChildren() const;
         bool HasChild(const std::string& name) const;
-        bool HasChild(const std::shared_ptr<SceneNode>& node) const;
+        bool HasChild(const SPtr<SceneNode>& node) const;
 
         bool IsInitialized() const;
         bool IsEnabled() const;
@@ -53,8 +53,8 @@ namespace AE
     private:
 
         const std::string _name;
-        std::unordered_map<std::string, std::shared_ptr<SceneNode>> _children;
-        std::weak_ptr<SceneNode> _parent;
+        std::unordered_map<std::string, SPtr<SceneNode>> _children;
+        WPtr<SceneNode> _parent;
 
         struct SceneNodeState
         {

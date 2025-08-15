@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <array>
 #include <unordered_map>
-#include <memory>
 
 // OpenGL
 
@@ -17,3 +16,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+
+// Common
+
+#include "Common/Ptr.hpp"

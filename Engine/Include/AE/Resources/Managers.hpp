@@ -13,30 +13,30 @@ namespace AE
         
         ShaderManager();
 
-        std::shared_ptr<Shader> Load(const std::string& name,
+        SPtr<Shader> Load(const std::string& name,
             const std::string& vertexPath,
             const std::string& fragmentPath
         );
 
-        std::shared_ptr<Shader> LoadFromSource(const std::string& name,
+        SPtr<Shader> LoadFromSource(const std::string& name,
             const std::string& vertexSrc,
             const std::string& fragmentSrc
         );
 
-        std::shared_ptr<Shader> GetBuiltinShader(const std::string& name);
+        SPtr<Shader> GetBuiltinShader(const std::string& name);
 
-        std::shared_ptr<Shader> GetStandardShader() const;
-        std::shared_ptr<Shader> GetSkyboxShader() const;
+        SPtr<Shader> GetStandardShader() const;
+        SPtr<Shader> GetSkyboxShader() const;
 
-        void SetStandardShader(std::shared_ptr<Shader> shader);
-        void SetSkyboxShader(std::shared_ptr<Shader> shader);
+        void SetStandardShader(SPtr<Shader> shader);
+        void SetSkyboxShader(SPtr<Shader> shader);
 
     private:
 
-        std::shared_ptr<Shader> _standardShader;
-        std::shared_ptr<Shader> _skyboxShader;
+        SPtr<Shader> _standardShader;
+        SPtr<Shader> _skyboxShader;
 
-        std::unordered_map<std::string, std::shared_ptr<Shader>> _builtinShaders;
+        std::unordered_map<std::string, SPtr<Shader>> _builtinShaders;
 
         bool _LoadBuiltinShaders();
 
@@ -50,11 +50,11 @@ namespace AE
 
         TextureManager();
 
-        std::shared_ptr<Texture> Load(const std::string& name,
+        SPtr<Texture> Load(const std::string& name,
             const std::string& path
         );
 
-        std::shared_ptr<Texture> Load(const std::string& name,
+        SPtr<Texture> Load(const std::string& name,
             unsigned char* data, size_t size,
             bool compressed = false,
             int width = 0, int height = 0,
@@ -70,7 +70,7 @@ namespace AE
 
         CubemapManager();
 
-        std::shared_ptr<Cubemap> Load(const std::string& name,
+        SPtr<Cubemap> Load(const std::string& name,
             const std::array<std::string, 6>& paths
         );
 
@@ -86,7 +86,7 @@ namespace AE
 
         ModelManager(TextureManager* textureMgr, ShaderManager* shaderMgr);
 
-        std::shared_ptr<Model> Load(const std::string& name,
+        SPtr<Model> Load(const std::string& name,
             const std::string& path
         );
     
@@ -99,10 +99,10 @@ namespace AE
         TextureManager* _textureMgr;
         ShaderManager* _shaderMgr;
 
-        void _ProcessNode(aiNode* node, const aiScene* scene, const std::shared_ptr<ModelNode>& parent);
-        std::shared_ptr<Mesh> _ProcessMesh(aiMesh* mesh, const aiScene* scene);
-        std::shared_ptr<Material> _ProcessMaterial(aiMaterial* aiMat, const aiScene* scene);
-        std::shared_ptr<Texture> _LoadTexture(aiMaterial* aiMat, aiTextureType type, const aiScene* scene);
+        void _ProcessNode(aiNode* node, const aiScene* scene, const SPtr<ModelNode>& parent);
+        SPtr<Mesh> _ProcessMesh(aiMesh* mesh, const aiScene* scene);
+        SPtr<Material> _ProcessMaterial(aiMaterial* aiMat, const aiScene* scene);
+        SPtr<Texture> _LoadTexture(aiMaterial* aiMat, aiTextureType type, const aiScene* scene);
         glm::mat4 _ConvertMatrix(const aiMatrix4x4& aiMat);
 
     };

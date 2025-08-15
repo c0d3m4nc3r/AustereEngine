@@ -23,8 +23,8 @@ namespace AE
     
     private:
     
-        std::unique_ptr<Keyboard> _keyboard;
-        std::unique_ptr<Mouse> _mouse;
+        UPtr<Keyboard> _keyboard;
+        UPtr<Mouse> _mouse;
     
         void _HandleEvent(const SDL_Event& event);
         void _Update();

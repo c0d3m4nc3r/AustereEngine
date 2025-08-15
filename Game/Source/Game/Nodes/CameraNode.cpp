@@ -14,7 +14,7 @@ const AE::Key MOVE_DOWN_KEY = AE::Key::LShift;
 
 bool CameraNode::OnInitialize()
 {
-    camera = std::make_shared<AE::Camera>();
+    camera = AE::MakeSPtr<AE::Camera>();
     camera->transform.SetParent(&transform);
 
     SDL_SetWindowRelativeMouseMode(engine->GetWindow()->GetWindow(), true);

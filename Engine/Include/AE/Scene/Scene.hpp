@@ -10,13 +10,13 @@ namespace AE
     {
     public:
 
-        Scene(const std::string& name, std::shared_ptr<SceneNode> root = nullptr);
+        Scene(const std::string& name, SPtr<SceneNode> root = nullptr);
         ~Scene();
 
         const std::string& GetName() const;
 
-        std::shared_ptr<SceneNode> GetRoot() const;
-        void SetRoot(std::shared_ptr<SceneNode> node);
+        SPtr<SceneNode> GetRoot() const;
+        void SetRoot(SPtr<SceneNode> node);
 
         bool IsInitialized() const;
         bool IsActive() const;
@@ -26,7 +26,7 @@ namespace AE
         Engine* _engine = nullptr;
 
         std::string _name;
-        std::shared_ptr<SceneNode> _root;
+        SPtr<SceneNode> _root;
 
         struct SceneState
         {

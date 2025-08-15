@@ -13,7 +13,7 @@ namespace AE
     static GLuint CompileShader(GLenum type, const std::string& source);
     static GLuint LinkProgram(GLuint vertexShader, GLuint fragmentShader);
 
-    std::shared_ptr<Shader> ShaderManager::Load(const std::string& name,
+    SPtr<Shader> ShaderManager::Load(const std::string& name,
         const std::string& vertexPath, const std::string& fragmentPath)
     {
         LoggerContext ctx("ShaderManager", "Load");
@@ -53,7 +53,7 @@ namespace AE
 
         if (!programID) return nullptr;
 
-        auto shader = std::make_shared<Shader>(programID);
+        auto shader = MakeSPtr<Shader>(programID);
 
         Add(name, shader);
 
@@ -62,7 +62,7 @@ namespace AE
         return shader;
     }
 
-    std::shared_ptr<Shader> ShaderManager::LoadFromSource(const std::string& name,
+    SPtr<Shader> ShaderManager::LoadFromSource(const std::string& name,
         const std::string& vertexSrc, const std::string& fragmentSrc)
     {
         LoggerContext ctx("ShaderManager", "Load");
@@ -94,7 +94,7 @@ namespace AE
 
         if (!programID) return nullptr;
 
-        auto shader = std::make_shared<Shader>(programID);
+        auto shader = MakeSPtr<Shader>(programID);
 
         Add(name, shader);
 
@@ -103,7 +103,7 @@ namespace AE
         return shader;
     }
 
-    std::shared_ptr<Shader> ShaderManager::GetBuiltinShader(const std::string& name)
+    SPtr<Shader> ShaderManager::GetBuiltinShader(const std::string& name)
     {
         auto it = _builtinShaders.find(name);
         if (it == _builtinShaders.end())
@@ -112,14 +112,14 @@ namespace AE
         return it->second;
     }
 
-    std::shared_ptr<Shader> ShaderManager::GetStandardShader() const { return _standardShader; }
-    std::shared_ptr<Shader> ShaderManager::GetSkyboxShader() const { return _skyboxShader; }
+    SPtr<Shader> ShaderManager::GetStandardShader() const { return _standardShader; }
+    SPtr<Shader> ShaderManager::GetSkyboxShader() const { return _skyboxShader; }
 
-    void ShaderManager::SetStandardShader(std::shared_ptr<Shader> shader)
+    void ShaderManager::SetStandardShader(SPtr<Shader> shader)
     {
         _standardShader = shader;
     }
-    void ShaderManager::SetSkyboxShader(std::shared_ptr<Shader> shader)
+    void ShaderManager::SetSkyboxShader(SPtr<Shader> shader)
     {
         _skyboxShader = shader;
     }

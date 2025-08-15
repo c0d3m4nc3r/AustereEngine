@@ -16,7 +16,7 @@ AustereGame::~AustereGame() {}
 
 bool AustereGame::OnInitialize()
 {
-    _scenes.test = std::make_shared<AE::Scene>("TestScene", std::make_shared<TestSceneRoot>());
+    _scenes.test = AE::MakeSPtr<AE::Scene>("TestScene", AE::MakeSPtr<TestSceneRoot>());
 
     AE::SceneManager* sceneMgr = engine->GetSceneManager();
     sceneMgr->AddScene(_scenes.test);

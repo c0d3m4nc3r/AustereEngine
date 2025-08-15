@@ -3,7 +3,7 @@
 
 namespace AE
 {
-    bool LightManager::AddLight(const std::string& name, std::unique_ptr<LightSource> light)
+    bool LightManager::AddLight(const std::string& name, UPtr<LightSource> light)
     {
         LoggerContext ctx("LightManager", "AddLight");
 

@@ -10,13 +10,13 @@ namespace AE
 
         /* Constructor & Destructor */
 
-        Skybox(std::shared_ptr<Cubemap> cubemap, std::shared_ptr<Mesh> mesh = nullptr);
+        Skybox(SPtr<Cubemap> cubemap, SPtr<Mesh> mesh = nullptr);
         ~Skybox();
 
         /* Public Members */
         
-        std::shared_ptr<Cubemap> cubemap;
-        std::shared_ptr<Mesh> mesh;
+        SPtr<Cubemap> cubemap;
+        SPtr<Mesh> mesh;
 
     };
 }

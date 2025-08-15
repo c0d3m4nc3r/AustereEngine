@@ -15,7 +15,7 @@ public:
     CameraNode(const std::string& name = "CameraNode")
         : AE::SceneNode(name) {}
 
-    std::shared_ptr<AE::Camera> camera;
+    AE::SPtr<AE::Camera> camera;
 
     float moveSpeed = 2.0f;
     float mouseSensitivity = 0.001f;
@@ -43,7 +43,7 @@ public:
     void OnRender() override;
 
 private:
-    std::shared_ptr<AE::Model> _testModel;
+    AE::SPtr<AE::Model> _testModel;
 };
 
 class TestSceneRoot : public AE::SceneNode
@@ -59,6 +59,6 @@ public:
     
 private:
 
-    std::shared_ptr<CameraNode> _cameraNode;
-    std::unique_ptr<AE::Skybox> _skybox;
+    AE::SPtr<CameraNode> _cameraNode;
+    AE::UPtr<AE::Skybox> _skybox;
 };

@@ -6,7 +6,7 @@ namespace AE
 {
     SceneManager::SceneManager(Engine* engine) : _engine(engine) {}
 
-    bool SceneManager::AddScene(std::shared_ptr<Scene> scene)
+    bool SceneManager::AddScene(SPtr<Scene> scene)
     {
         LoggerContext ctx("SceneManager", "AddScene");
 
@@ -50,7 +50,7 @@ namespace AE
         return true;
     }
 
-    bool SceneManager::RemoveScene(const std::shared_ptr<Scene>& scene)
+    bool SceneManager::RemoveScene(const SPtr<Scene>& scene)
     {
         LoggerContext ctx("SceneManager", "RemoveScene");
         
@@ -63,7 +63,7 @@ namespace AE
         return RemoveScene(scene->GetName());
     }
 
-    std::shared_ptr<Scene> SceneManager::GetScene(const std::string& name) const
+    SPtr<Scene> SceneManager::GetScene(const std::string& name) const
     {
         LoggerContext ctx("SceneManager", "GetScene");
 
@@ -79,7 +79,7 @@ namespace AE
     
     int SceneManager::GetScenesCount() const { return _scenes.size(); }
     
-    std::shared_ptr<Scene> SceneManager::GetActiveScene() const { return _activeScene.lock(); }
+    SPtr<Scene> SceneManager::GetActiveScene() const { return _activeScene.lock(); }
 
     void SceneManager::SetActiveScene(const std::string& name)
     {
@@ -113,7 +113,7 @@ namespace AE
         return _scenes.find(name) != _scenes.end(); 
     }
     
-    bool SceneManager::HasScene(std::shared_ptr<Scene> scene) 
+    bool SceneManager::HasScene(SPtr<Scene> scene) 
     {
         if (!scene) return false;
         return _scenes.find(scene->GetName()) != _scenes.end();

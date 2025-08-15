@@ -23,7 +23,7 @@ public:
 private:
 
     struct GameScenes {
-        std::shared_ptr<AE::Scene> test;
+        AE::SPtr<AE::Scene> test;
     } _scenes;
     
 };

@@ -79,7 +79,7 @@ namespace AE
     }
 
     Application* Engine::GetApplication() const { return _application.get(); }
-    void Engine::SetApplication(std::unique_ptr<Application>&& application)
+    void Engine::SetApplication(UPtr<Application>&& application)
     {
         _application = std::move(application);
         if (_application)
@@ -122,7 +122,7 @@ namespace AE
 
         EngineSettings& settings = EngineSettings::Get();
 
-        _window = std::make_unique<Window>(
+        _window = MakeUPtr<Window>(
             settings.window.title,
             settings.window.width,
             settings.window.height,
@@ -137,28 +137,28 @@ namespace AE
             return false;
         }
 
-        _shaderMgr = std::make_unique<ShaderManager>();
+        _shaderMgr = MakeUPtr<ShaderManager>();
         if (!_shaderMgr->_LoadBuiltinShaders())
         {
             Logger::Error("Failed to load built-in shaders! Aborting...");
             return false;
         }
 
-        _lightMgr = std::make_unique<LightManager>();
+        _lightMgr = MakeUPtr<LightManager>();
 
-        _renderer = std::make_unique<Renderer>(_lightMgr.get(), _shaderMgr.get());
+        _renderer = MakeUPtr<Renderer>(_lightMgr.get(), _shaderMgr.get());
         if (!_renderer->_Initialize())
         {
             Logger::Error("Renderer initialization failed! Aborting...");
             return false;
         }
 
-        _cubemapMgr = std::make_unique<CubemapManager>();
-        _textureMgr = std::make_unique<TextureManager>();
-        _modelMgr = std::make_unique<ModelManager>(_textureMgr.get(), _shaderMgr.get());
+        _cubemapMgr = MakeUPtr<CubemapManager>();
+        _textureMgr = MakeUPtr<TextureManager>();
+        _modelMgr = MakeUPtr<ModelManager>(_textureMgr.get(), _shaderMgr.get());
         
-        _inputMgr = std::make_unique<InputManager>(_window.get());
-        _sceneMgr = std::make_unique<SceneManager>(this);
+        _inputMgr = MakeUPtr<InputManager>(_window.get());
+        _sceneMgr = MakeUPtr<SceneManager>(this);
 
         _state.initialized = true;
         

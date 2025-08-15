@@ -24,14 +24,14 @@ bool TestSceneRoot::OnInitialize()
         return false;
     }
 
-    _skybox = std::make_unique<AE::Skybox>(cubemap);
+    _skybox = AE::MakeUPtr<AE::Skybox>(cubemap);
 
-    _cameraNode = std::make_shared<CameraNode>();
+    _cameraNode = AE::MakeSPtr<CameraNode>();
     AddChild(_cameraNode);
-    AddChild(std::make_shared<TestNode>());
+    AddChild(AE::MakeSPtr<TestNode>());
 
     AE::LightManager* lightMgr = engine->GetLightManager();
-    lightMgr->AddLight("Sun", std::make_unique<AE::DirectionalLight>(
+    lightMgr->AddLight("Sun", AE::MakeUPtr<AE::DirectionalLight>(
         AE::Color::White, 1.0f, glm::normalize(glm::vec3(-0.5f, -1.0f, -0.5f))
     ));
 

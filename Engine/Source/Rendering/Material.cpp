@@ -14,7 +14,7 @@ namespace AE
     };
 
     Material::Material(
-        std::shared_ptr<Shader> shader,
+        SPtr<Shader> shader,
         const Color& ambientColor,
         const Color& diffuseColor,
         const Color& specularColor,
@@ -96,13 +96,13 @@ namespace AE
     const Color& Material::GetSpecularColor() const { return _specularColor; }
     float Material::GetShininess() const { return _shininess; }
 
-    std::shared_ptr<Texture> Material::GetDiffuseTexture() const { return _diffuseTexture; }
-    std::shared_ptr<Texture> Material::GetSpecularTexture() const { return _specularTexture; }
-    std::shared_ptr<Texture> Material::GetEmissiveTexture() const { return _emissiveTexture; }
-    std::shared_ptr<Texture> Material::GetNormalTexture() const { return _normalTexture; }
-    std::shared_ptr<Texture> Material::GetOpacityTexture() const { return _opacityTexture; }
+    SPtr<Texture> Material::GetDiffuseTexture() const { return _diffuseTexture; }
+    SPtr<Texture> Material::GetSpecularTexture() const { return _specularTexture; }
+    SPtr<Texture> Material::GetEmissiveTexture() const { return _emissiveTexture; }
+    SPtr<Texture> Material::GetNormalTexture() const { return _normalTexture; }
+    SPtr<Texture> Material::GetOpacityTexture() const { return _opacityTexture; }
 
-    std::shared_ptr<Shader> Material::GetShader() const { return _shader; }
+    SPtr<Shader> Material::GetShader() const { return _shader; }
 
     bool Material::HasDiffuseTexture() const { return _diffuseTexture != nullptr; }
     bool Material::HasSpecularTexture() const { return _specularTexture != nullptr; }
@@ -123,11 +123,11 @@ namespace AE
     void Material::SetSpecularColor(const Color& specularColor) { _specularColor = specularColor; }
     void Material::SetShininess(float shininess) { _shininess = shininess; }
 
-    void Material::SetDiffuseTexture(std::shared_ptr<Texture> texture) { _diffuseTexture = texture; }
-    void Material::SetSpecularTexture(std::shared_ptr<Texture> texture) { _specularTexture = texture; }
-    void Material::SetEmissiveTexture(std::shared_ptr<Texture> texture) { _emissiveTexture = texture; }
-    void Material::SetNormalTexture(std::shared_ptr<Texture> texture) { _normalTexture = texture; }
-    void Material::SetOpacityTexture(std::shared_ptr<Texture> texture) { _opacityTexture = texture; }
+    void Material::SetDiffuseTexture(SPtr<Texture> texture) { _diffuseTexture = texture; }
+    void Material::SetSpecularTexture(SPtr<Texture> texture) { _specularTexture = texture; }
+    void Material::SetEmissiveTexture(SPtr<Texture> texture) { _emissiveTexture = texture; }
+    void Material::SetNormalTexture(SPtr<Texture> texture) { _normalTexture = texture; }
+    void Material::SetOpacityTexture(SPtr<Texture> texture) { _opacityTexture = texture; }
 
-    void Material::SetShader(std::shared_ptr<Shader> shader) { _shader = shader; }
+    void Material::SetShader(SPtr<Shader> shader) { _shader = shader; }
 }

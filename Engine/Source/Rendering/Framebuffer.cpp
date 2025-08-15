@@ -21,11 +21,11 @@ namespace AE
             glDeleteFramebuffers(1, &_id);
     }
 
-    std::shared_ptr<Framebuffer> Framebuffer::Create(int width, int height)
+    SPtr<Framebuffer> Framebuffer::Create(int width, int height)
     {
         GLuint id;
         glGenFramebuffers(1, &id);
-        return std::make_shared<Framebuffer>(id, width, height);
+        return MakeSPtr<Framebuffer>(id, width, height);
     }
 
     void Framebuffer::Bind() const
@@ -107,7 +107,7 @@ namespace AE
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void Framebuffer::AttachColorTexture(std::shared_ptr<Texture> texture, GLenum slot)
+    void Framebuffer::AttachColorTexture(SPtr<Texture> texture, GLenum slot)
     {
         if (!texture) return;
 
@@ -141,7 +141,7 @@ namespace AE
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void Framebuffer::AttachColorTextureLayer(std::shared_ptr<TextureArray> textureArray, int layer, GLenum slot)
+    void Framebuffer::AttachColorTextureLayer(SPtr<TextureArray> textureArray, int layer, GLenum slot)
     {
         if (!textureArray) return;
 
@@ -175,7 +175,7 @@ namespace AE
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void Framebuffer::AttachDepthTexture(std::shared_ptr<Texture> texture)
+    void Framebuffer::AttachDepthTexture(SPtr<Texture> texture)
     {
         if (!texture) return;
 
@@ -211,7 +211,7 @@ namespace AE
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void Framebuffer::AttachDepthTextureLayer(std::shared_ptr<TextureArray> textureArray, int layer)
+    void Framebuffer::AttachDepthTextureLayer(SPtr<TextureArray> textureArray, int layer)
     {
         if (!textureArray) return;
 
@@ -321,7 +321,7 @@ namespace AE
     int Framebuffer::GetWidth() const { return _width; }
     int Framebuffer::GetHeight() const { return _height; }
 
-    std::shared_ptr<Texture> Framebuffer::GetColorTexture(GLenum slot) const
+    SPtr<Texture> Framebuffer::GetColorTexture(GLenum slot) const
     {
         for (const auto& attachment : _colorAttachments)
         {
@@ -331,7 +331,7 @@ namespace AE
         return nullptr;
     }
 
-    std::shared_ptr<TextureArray> Framebuffer::GetColorTextureArray(GLenum slot) const
+    SPtr<TextureArray> Framebuffer::GetColorTextureArray(GLenum slot) const
     {
         for (const auto& attachment : _colorArrayAttachments)
         {
@@ -351,12 +351,12 @@ namespace AE
         return -1;
     }
 
-    std::shared_ptr<Texture> Framebuffer::GetDepthTexture() const
+    SPtr<Texture> Framebuffer::GetDepthTexture() const
     {
         return _depthAttachment ? _depthAttachment->texture : nullptr;
     }
 
-    std::shared_ptr<TextureArray> Framebuffer::GetDepthTextureArray() const
+    SPtr<TextureArray> Framebuffer::GetDepthTextureArray() const
     {
         return _depthArrayAttachment ? _depthArrayAttachment->textureArray : nullptr;
     }

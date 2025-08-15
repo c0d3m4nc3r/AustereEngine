@@ -4,8 +4,8 @@ namespace AE
 {
     InputManager::InputManager(Window* window)
     {
-        _keyboard = std::make_unique<Keyboard>();
-        _mouse = std::make_unique<Mouse>(window);
+        _keyboard = MakeUPtr<Keyboard>();
+        _mouse = MakeUPtr<Mouse>(window);
     }
     
     Keyboard* InputManager::GetKeyboard() const { return _keyboard.get(); }

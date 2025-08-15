@@ -10,7 +10,7 @@ namespace AE
     TextureManager::TextureManager()
         : ResourceManager("Texture") {}
 
-    std::shared_ptr<Texture> TextureManager::Load(const std::string& name,
+    SPtr<Texture> TextureManager::Load(const std::string& name,
         const std::string& path)
     {
         LoggerContext ctx("TextureManager", "Load<file>");
@@ -57,7 +57,7 @@ namespace AE
         return texture;
     }
 
-    std::shared_ptr<Texture> TextureManager::Load(const std::string& name,
+    SPtr<Texture> TextureManager::Load(const std::string& name,
         unsigned char* data, size_t size, bool compressed,
         int width, int height, int channels)
     {

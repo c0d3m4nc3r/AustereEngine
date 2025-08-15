@@ -6,7 +6,7 @@ namespace AE
     TextureArray::TextureArray(GLuint id, const TextureDesc& desc, int layers)
         : Texture(id, desc, GL_TEXTURE_2D_ARRAY) {}
 
-    std::shared_ptr<TextureArray> TextureArray::Create(const TextureDesc& desc, int layers)
+    SPtr<TextureArray> TextureArray::Create(const TextureDesc& desc, int layers)
     {
         GLuint id;
         glGenTextures(1, &id);
@@ -49,7 +49,7 @@ namespace AE
 
         glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 
-        return std::make_shared<TextureArray>(id, desc, layers);
+        return MakeSPtr<TextureArray>(id, desc, layers);
     }
 
     int TextureArray::GetLayerCount() const { return _layers; }

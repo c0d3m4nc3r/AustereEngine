@@ -10,7 +10,7 @@ namespace AE
         const TextureDesc& descriptor
     ) : Texture(id, descriptor) {}
 
-    std::shared_ptr<Cubemap> Cubemap::Create(const std::array<TextureData, 6> facesData)
+    SPtr<Cubemap> Cubemap::Create(const std::array<TextureData, 6> facesData)
     {
         LoggerContext ctx("Cubemap", "Create");
 
@@ -75,7 +75,7 @@ namespace AE
             Logger::Error("OpenGL error: {}", error);
         }
 
-        return std::make_shared<Cubemap>(cubemapID, descriptor);
+        return MakeSPtr<Cubemap>(cubemapID, descriptor);
     }
 
     void Cubemap::AllocateStorage(int width, int height, GLenum internalFormat, GLenum format)

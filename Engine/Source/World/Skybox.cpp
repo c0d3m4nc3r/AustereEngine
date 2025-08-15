@@ -25,7 +25,7 @@ const float skyboxVertices[] = {
 
 namespace AE
 {
-    Skybox::Skybox(std::shared_ptr<Cubemap> cubemap, std::shared_ptr<Mesh> mesh)
+    Skybox::Skybox(SPtr<Cubemap> cubemap, SPtr<Mesh> mesh)
         : cubemap(cubemap)
     {
         if (!mesh)
@@ -42,7 +42,7 @@ namespace AE
                 ));
             }
             
-            this->mesh = std::make_shared<Mesh>(vertices);
+            this->mesh = MakeSPtr<Mesh>(vertices);
         }
     }
 

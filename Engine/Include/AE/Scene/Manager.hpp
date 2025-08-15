@@ -12,25 +12,25 @@ namespace AE
 
         SceneManager(Engine* engine);
 
-        bool AddScene(std::shared_ptr<Scene> scene);
+        bool AddScene(SPtr<Scene> scene);
         bool RemoveScene(const std::string& name);
-        bool RemoveScene(const std::shared_ptr<Scene>& scene);
+        bool RemoveScene(const SPtr<Scene>& scene);
 
-        std::shared_ptr<Scene> GetScene(const std::string& name) const;
+        SPtr<Scene> GetScene(const std::string& name) const;
         int GetScenesCount() const;
 
-        std::shared_ptr<Scene> GetActiveScene() const;
+        SPtr<Scene> GetActiveScene() const;
         void SetActiveScene(const std::string& name);
 
         bool HasScene(const std::string& name);
-        bool HasScene(std::shared_ptr<Scene> scene);
+        bool HasScene(SPtr<Scene> scene);
 
     private:
 
         Engine* _engine = nullptr;
 
-        std::unordered_map<std::string, std::shared_ptr<Scene>> _scenes;
-        std::weak_ptr<Scene> _activeScene;
+        std::unordered_map<std::string, SPtr<Scene>> _scenes;
+        WPtr<Scene> _activeScene;
 
         void _Update();
         void _Render();

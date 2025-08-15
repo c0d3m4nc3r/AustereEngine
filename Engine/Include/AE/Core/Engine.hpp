@@ -25,7 +25,7 @@ namespace AE
         void Stop();
 
         Application* GetApplication() const;
-        void SetApplication(std::unique_ptr<Application>&& application);
+        void SetApplication(UPtr<Application>&& application);
 
         Window* GetWindow() const;
         Renderer* GetRenderer() const;
@@ -45,16 +45,16 @@ namespace AE
 
     private:
 
-        std::unique_ptr<Application> _application;
-        std::unique_ptr<Window> _window;
-        std::unique_ptr<Renderer> _renderer;
-        std::unique_ptr<InputManager> _inputMgr;
-        std::unique_ptr<SceneManager> _sceneMgr;
-        std::unique_ptr<LightManager> _lightMgr;
-        std::unique_ptr<ShaderManager> _shaderMgr;
-        std::unique_ptr<TextureManager> _textureMgr;
-        std::unique_ptr<CubemapManager> _cubemapMgr;
-        std::unique_ptr<ModelManager> _modelMgr;
+        UPtr<Application> _application;
+        UPtr<Window> _window;
+        UPtr<Renderer> _renderer;
+        UPtr<InputManager> _inputMgr;
+        UPtr<SceneManager> _sceneMgr;
+        UPtr<LightManager> _lightMgr;
+        UPtr<ShaderManager> _shaderMgr;
+        UPtr<TextureManager> _textureMgr;
+        UPtr<CubemapManager> _cubemapMgr;
+        UPtr<ModelManager> _modelMgr;
 
         uint32_t _frameCount = 0;
         uint32_t _framesPerSecond = 0;

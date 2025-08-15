@@ -100,8 +100,8 @@ namespace AE
     RenderMode Renderer::GetRenderMode() const { return _renderMode; }
     void Renderer::SetRenderMode(RenderMode mode) { _renderMode = mode; }
     
-    std::shared_ptr<Camera> Renderer::GetCamera() const { return _camera; }
-    void Renderer::SetCamera(std::shared_ptr<Camera> camera) { _camera = camera; }
+    SPtr<Camera> Renderer::GetCamera() const { return _camera; }
+    void Renderer::SetCamera(SPtr<Camera> camera) { _camera = camera; }
     
     bool Renderer::IsInitialized() const { return _state.initialized; }
     

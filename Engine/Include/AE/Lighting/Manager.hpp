@@ -11,7 +11,7 @@ namespace AE
     {
     public:
         
-        bool AddLight(const std::string& name, std::unique_ptr<LightSource> light);
+        bool AddLight(const std::string& name, UPtr<LightSource> light);
         bool RemoveLight(const std::string& name);
         
         void Apply(Shader* shader);
@@ -25,7 +25,7 @@ namespace AE
 
     private:
 
-        std::unordered_map<std::string, std::unique_ptr<LightSource>> _lights;
+        std::unordered_map<std::string, UPtr<LightSource>> _lights;
     };
 }
 

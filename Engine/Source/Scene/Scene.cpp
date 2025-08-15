@@ -4,11 +4,11 @@
 
 namespace AE
 {
-    Scene::Scene(const std::string& name, std::shared_ptr<SceneNode> root)
+    Scene::Scene(const std::string& name, SPtr<SceneNode> root)
         : _name(name)
     {
         if (!root)
-            _root = std::make_shared<SceneNode>("Root");
+            _root = MakeSPtr<SceneNode>("Root");
         else
             _root = root;
     }
@@ -21,8 +21,8 @@ namespace AE
 
     const std::string& Scene::GetName() const { return _name; }
 
-    std::shared_ptr<SceneNode> Scene::GetRoot() const { return _root; }
-    void Scene::SetRoot(std::shared_ptr<SceneNode> node)
+    SPtr<SceneNode> Scene::GetRoot() const { return _root; }
+    void Scene::SetRoot(SPtr<SceneNode> node)
     {
         if (node)
         {

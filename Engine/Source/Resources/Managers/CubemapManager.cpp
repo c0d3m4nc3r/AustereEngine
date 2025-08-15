@@ -8,7 +8,7 @@ namespace AE
     CubemapManager::CubemapManager()
         : ResourceManager("Cubemap") {}
 
-    std::shared_ptr<Cubemap> CubemapManager::Load(const std::string& name,
+    SPtr<Cubemap> CubemapManager::Load(const std::string& name,
         const std::array<std::string, 6>& paths)
     {
         LoggerContext ctx("CubemapManager", "Load");

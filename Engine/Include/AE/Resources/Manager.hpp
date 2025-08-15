@@ -14,7 +14,7 @@ namespace AE
         ResourceManager(const std::string& resourceName = "Resource")
             : _resourceName(resourceName) {}
 
-        bool Add(const std::string& name, std::shared_ptr<ResourceType> resource)
+        bool Add(const std::string& name, SPtr<ResourceType> resource)
         {
             LoggerContext ctx(_resourceName + "Manager", "Add");
 
@@ -62,7 +62,7 @@ namespace AE
             _resources.clear();
         }
 
-        std::shared_ptr<ResourceType> Get(const std::string& name) const
+        SPtr<ResourceType> Get(const std::string& name) const
         {
             auto it = _resources.find(name);
             if (it != _resources.end())
@@ -85,7 +85,7 @@ namespace AE
     private:
 
         std::string _resourceName;
-        std::unordered_map<std::string, std::weak_ptr<ResourceType>> _resources;
+        std::unordered_map<std::string, WPtr<ResourceType>> _resources;
 
     };
 }

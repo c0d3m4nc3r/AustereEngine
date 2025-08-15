@@ -18,7 +18,7 @@ namespace AE
           _textureMgr(textureMgr),
           _shaderMgr(shaderMgr) {}
 
-    std::shared_ptr<Model> ModelManager::Load(const std::string& name,
+    SPtr<Model> ModelManager::Load(const std::string& name,
         const std::string& path)
     {
         LoggerContext ctx("ModelManager", "Load");
@@ -50,9 +50,9 @@ namespace AE
         fs::path p(path);
         _directory = p.has_parent_path() ? p.parent_path().string() : ".";
 
-        auto model = std::make_shared<Model>();
+        auto model = MakeSPtr<Model>();
 
-        model->root = std::make_shared<ModelNode>(
+        model->root = MakeSPtr<ModelNode>(
             scene->mRootNode->mName.C_Str(),
             _ConvertMatrix(scene->mRootNode->mTransformation)
         );
@@ -68,7 +68,7 @@ namespace AE
         return model;
     }
 
-    void ModelManager::_ProcessNode(aiNode* node, const aiScene* scene, const std::shared_ptr<ModelNode>& parent)
+    void ModelManager::_ProcessNode(aiNode* node, const aiScene* scene, const SPtr<ModelNode>& parent)
     {
         LoggerContext ctx("ModelManager", "_ProcessNode");
 
@@ -87,7 +87,7 @@ namespace AE
 
         for (unsigned int i = 0; i < node->mNumChildren; ++i)
         {
-            auto childNode = std::make_shared<ModelNode>(
+            auto childNode = MakeSPtr<ModelNode>(
                 node->mChildren[i]->mName.C_Str(),
                 _ConvertMatrix(node->mChildren[i]->mTransformation)
             );
@@ -98,7 +98,7 @@ namespace AE
         }
     }
 
-    std::shared_ptr<Mesh> ModelManager::_ProcessMesh(aiMesh* mesh, const aiScene* scene)
+    SPtr<Mesh> ModelManager::_ProcessMesh(aiMesh* mesh, const aiScene* scene)
     {
         LoggerContext ctx("ModelManager", "_ProcessMesh");
 
@@ -135,7 +135,7 @@ namespace AE
             }
         }
 
-        auto outMesh = std::make_shared<Mesh>(vertices, indices, normals, texCoords);
+        auto outMesh = MakeSPtr<Mesh>(vertices, indices, normals, texCoords);
         
         glm::vec3 aabbMin = {mesh->mAABB.mMin[0], mesh->mAABB.mMin[1], mesh->mAABB.mMin[2]};
         glm::vec3 aabbMax = {mesh->mAABB.mMax[0], mesh->mAABB.mMax[1], mesh->mAABB.mMax[2]};
@@ -164,7 +164,7 @@ namespace AE
         }
     }
 
-    std::shared_ptr<Material> ModelManager::_ProcessMaterial(aiMaterial* aiMat, const aiScene* scene)
+    SPtr<Material> ModelManager::_ProcessMaterial(aiMaterial* aiMat, const aiScene* scene)
     {
         aiColor3D color;
         float shininess = 32.0f;
@@ -187,7 +187,7 @@ namespace AE
             shininess = 32.0f;
         }
 
-        auto material = std::make_shared<Material>(_shaderMgr->GetStandardShader(), ambient, diffuse, specular, shininess);
+        auto material = MakeSPtr<Material>(_shaderMgr->GetStandardShader(), ambient, diffuse, specular, shininess);
 
         // for (int type = aiTextureType_NONE + 1; type <= aiTextureType_REFLECTION; ++type)
         // {
@@ -202,7 +202,7 @@ namespace AE
         {
             if (aiMat->GetTextureCount(type) > 0)
             {
-                std::shared_ptr<Texture> tex = _LoadTexture(aiMat, type, scene);
+                SPtr<Texture> tex = _LoadTexture(aiMat, type, scene);
                 if (tex)
                 {
                     (material.get()->*setter)(tex);
@@ -219,7 +219,7 @@ namespace AE
         return material;
     }
 
-    std::shared_ptr<Texture> ModelManager::_LoadTexture(aiMaterial* aiMat, aiTextureType type, const aiScene* scene)
+    SPtr<Texture> ModelManager::_LoadTexture(aiMaterial* aiMat, aiTextureType type, const aiScene* scene)
     {
         LoggerContext ctx("ModelManager", "_LoadTexture");
 

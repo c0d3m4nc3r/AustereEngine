@@ -30,7 +30,7 @@ namespace AE
         }
     }
 
-    std::shared_ptr<Texture> Texture::Create(const TextureData& data, bool generateMipmaps)
+    SPtr<Texture> Texture::Create(const TextureData& data, bool generateMipmaps)
     {
         LoggerContext ctx("Texture", "Create");
 
@@ -75,7 +75,7 @@ namespace AE
             settings.graphics.defaultMagFilter
         );
 
-        auto texture = std::make_shared<Texture>(textureID, descriptor, GL_TEXTURE_2D, generateMipmaps);
+        auto texture = MakeSPtr<Texture>(textureID, descriptor, GL_TEXTURE_2D, generateMipmaps);
 
         texture->_hasTransparency = hasTransparency;
 
@@ -158,9 +158,9 @@ namespace AE
         _hasMipmaps = true;
     }
 
-    std::shared_ptr<Texture> Texture::GetDefault()
+    SPtr<Texture> Texture::GetDefault()
     {
-        static std::shared_ptr<Texture> defaultTexture = []() -> std::shared_ptr<Texture>
+        static SPtr<Texture> defaultTexture = []() -> SPtr<Texture>
         {
             const int width = 16;
             const int height = 16;

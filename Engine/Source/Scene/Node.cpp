@@ -12,7 +12,7 @@ namespace AE
             _Destroy();
     }
     
-    bool SceneNode::AddChild(std::shared_ptr<SceneNode> node)
+    bool SceneNode::AddChild(SPtr<SceneNode> node)
     {
         LoggerContext ctx("SceneNode(" + _name + ")", "AddChild");
 
@@ -64,7 +64,7 @@ namespace AE
         return true;
     }
 
-    bool SceneNode::RemoveChild(const std::shared_ptr<SceneNode>& node)
+    bool SceneNode::RemoveChild(const SPtr<SceneNode>& node)
     {
         LoggerContext ctx("SceneNode(" + _name + ")", "RemoveChild");
 
@@ -95,7 +95,7 @@ namespace AE
     const Transform& SceneNode::GetTransform() const { return transform; }
     void SceneNode::SetTransform(const Transform& transform) { this->transform = transform; }
 
-    std::shared_ptr<SceneNode> SceneNode::GetChild(const std::string& name) const
+    SPtr<SceneNode> SceneNode::GetChild(const std::string& name) const
     {
         auto it = _children.find(name);
         return it != _children.end() ? it->second : nullptr;
@@ -103,8 +103,8 @@ namespace AE
 
     std::size_t SceneNode::GetChildrenCount() const { return _children.size(); }
 
-    std::shared_ptr<SceneNode> SceneNode::GetParent() const { return _parent.lock(); }
-    void SceneNode::SetParent(std::shared_ptr<SceneNode> node)
+    SPtr<SceneNode> SceneNode::GetParent() const { return _parent.lock(); }
+    void SceneNode::SetParent(SPtr<SceneNode> node)
     {
         _parent = node;
         transform.SetParent(node ? &node->GetTransform() : nullptr);
@@ -118,7 +118,7 @@ namespace AE
         return _children.find(name) != _children.end();
     }
 
-    bool SceneNode::HasChild(const std::shared_ptr<SceneNode>& node) const
+    bool SceneNode::HasChild(const SPtr<SceneNode>& node) const
     {
         if (!node) return false;
         auto it = _children.find(node->GetName());

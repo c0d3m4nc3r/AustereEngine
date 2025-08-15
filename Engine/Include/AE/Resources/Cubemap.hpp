@@ -16,7 +16,7 @@ namespace AE
             const TextureDesc& descriptor = TextureDesc()
         );
 
-        static std::shared_ptr<Cubemap> Create(const std::array<TextureData, 6> facesData);
+        static SPtr<Cubemap> Create(const std::array<TextureData, 6> facesData);
 
     protected:
 

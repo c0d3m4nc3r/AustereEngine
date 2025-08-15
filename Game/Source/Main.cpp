@@ -13,6 +13,6 @@ int main(int argc, char* argv[])
         .description = "Game for testing Austere Engine."
     };
 
-    engine.SetApplication(std::make_unique<AustereGame>(info));
+    engine.SetApplication(MakeUPtr<AustereGame>(info));
     return engine.Run(argc, argv);
 }

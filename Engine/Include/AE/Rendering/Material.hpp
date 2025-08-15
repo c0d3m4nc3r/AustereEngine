@@ -11,7 +11,7 @@ namespace AE
     public:
 
         Material(
-            std::shared_ptr<Shader> shader = nullptr,
+            SPtr<Shader> shader = nullptr,
             const Color& ambientColor = Color(0.2f, 0.2f, 0.2f, 1.0f),
             const Color& diffuseColor = Color(0.8f, 0.8f, 0.8f, 1.0f),
             const Color& specularColor = Color(1.0f, 1.0f, 1.0f, 1.0f),
@@ -29,13 +29,13 @@ namespace AE
         const Color& GetSpecularColor() const;
         float GetShininess() const;
         
-        std::shared_ptr<Texture> GetDiffuseTexture() const;
-        std::shared_ptr<Texture> GetSpecularTexture() const;
-        std::shared_ptr<Texture> GetEmissiveTexture() const;
-        std::shared_ptr<Texture> GetNormalTexture() const;
-        std::shared_ptr<Texture> GetOpacityTexture() const;
+        SPtr<Texture> GetDiffuseTexture() const;
+        SPtr<Texture> GetSpecularTexture() const;
+        SPtr<Texture> GetEmissiveTexture() const;
+        SPtr<Texture> GetNormalTexture() const;
+        SPtr<Texture> GetOpacityTexture() const;
 
-        std::shared_ptr<Shader> GetShader() const;
+        SPtr<Shader> GetShader() const;
 
         bool HasDiffuseTexture() const;
         bool HasSpecularTexture() const;
@@ -50,13 +50,13 @@ namespace AE
         void SetSpecularColor(const Color& specularColor);
         void SetShininess(float shininess);
 
-        void SetDiffuseTexture(std::shared_ptr<Texture> texture);
-        void SetSpecularTexture(std::shared_ptr<Texture> texture);
-        void SetEmissiveTexture(std::shared_ptr<Texture> texture);
-        void SetNormalTexture(std::shared_ptr<Texture> texture);
-        void SetOpacityTexture(std::shared_ptr<Texture> texture);
+        void SetDiffuseTexture(SPtr<Texture> texture);
+        void SetSpecularTexture(SPtr<Texture> texture);
+        void SetEmissiveTexture(SPtr<Texture> texture);
+        void SetNormalTexture(SPtr<Texture> texture);
+        void SetOpacityTexture(SPtr<Texture> texture);
 
-        void SetShader(std::shared_ptr<Shader> shader);
+        void SetShader(SPtr<Shader> shader);
 
     private:
 
@@ -65,12 +65,12 @@ namespace AE
         Color _specularColor;
         float _shininess;
 
-        std::shared_ptr<Texture> _diffuseTexture;
-        std::shared_ptr<Texture> _specularTexture;
-        std::shared_ptr<Texture> _emissiveTexture;
-        std::shared_ptr<Texture> _normalTexture;
-        std::shared_ptr<Texture> _opacityTexture;
+        SPtr<Texture> _diffuseTexture;
+        SPtr<Texture> _specularTexture;
+        SPtr<Texture> _emissiveTexture;
+        SPtr<Texture> _normalTexture;
+        SPtr<Texture> _opacityTexture;
 
-        std::shared_ptr<Shader> _shader;
+        SPtr<Shader> _shader;
     };
 }

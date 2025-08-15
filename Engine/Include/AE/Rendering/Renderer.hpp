@@ -35,8 +35,8 @@ namespace AE
         RenderMode GetRenderMode() const;
         void SetRenderMode(RenderMode mode);
     
-        std::shared_ptr<Camera> GetCamera() const;
-        void SetCamera(std::shared_ptr<Camera> camera);
+        SPtr<Camera> GetCamera() const;
+        void SetCamera(SPtr<Camera> camera);
         
         bool IsInitialized() const;
     
@@ -64,7 +64,7 @@ namespace AE
         std::vector<RenderBatch> _transparentBatches;
         Skybox* _submittedSkybox = nullptr;
     
-        std::shared_ptr<Camera> _camera;
+        SPtr<Camera> _camera;
     
         struct RendererState
         {
