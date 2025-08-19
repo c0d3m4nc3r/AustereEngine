@@ -7,11 +7,11 @@
 namespace AE
 {
     template <typename ResourceType>
-    class ResourceManager
+    class ResourceManagerBase
     {
     public:
 
-        ResourceManager(const std::string& resourceName = "Resource")
+        ResourceManagerBase(const std::string& resourceName = "Resource")
             : _resourceName(resourceName) {}
 
         bool Add(const std::string& name, SPtr<ResourceType> resource)

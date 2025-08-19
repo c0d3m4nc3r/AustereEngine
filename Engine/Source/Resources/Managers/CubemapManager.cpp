@@ -6,7 +6,7 @@
 namespace AE
 {
     CubemapManager::CubemapManager()
-        : ResourceManager("Cubemap") {}
+        : ResourceManagerBase("Cubemap") {}
 
     SPtr<Cubemap> CubemapManager::Load(const std::string& name,
         const std::array<std::string, 6>& paths)

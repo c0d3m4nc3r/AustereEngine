@@ -14,7 +14,7 @@ namespace AE
     namespace fs = std::filesystem;
     
     ModelManager::ModelManager(TextureManager* textureMgr, ShaderManager* shaderMgr)
-        : ResourceManager("Model"),
+        : ResourceManagerBase("Model"),
           _textureMgr(textureMgr),
           _shaderMgr(shaderMgr) {}
 

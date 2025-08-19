@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Resources/Manager.hpp"
+#include "Resources/ManagerBase.hpp"
 
 #include <assimp/scene.h>
 
 namespace AE
 {
     class Shader;
-    class ShaderManager : public ResourceManager<Shader>
+    class ShaderManager : public ResourceManagerBase<Shader>
     {
     public:
         
@@ -44,7 +44,7 @@ namespace AE
     };
 
     class Texture;
-    class TextureManager : public ResourceManager<Texture>
+    class TextureManager : public ResourceManagerBase<Texture>
     {
     public:
 
@@ -64,7 +64,7 @@ namespace AE
     };
 
     class Cubemap;
-    class CubemapManager : public ResourceManager<Cubemap>
+    class CubemapManager : public ResourceManagerBase<Cubemap>
     {
     public:
 
@@ -80,7 +80,7 @@ namespace AE
     class Mesh;
     class Model;
     class ModelNode;
-    class ModelManager : public ResourceManager<Model>
+    class ModelManager : public ResourceManagerBase<Model>
     {
     public:
 

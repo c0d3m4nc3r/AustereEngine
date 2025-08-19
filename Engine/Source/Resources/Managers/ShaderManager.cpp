@@ -7,7 +7,7 @@
 namespace AE
 {
     ShaderManager::ShaderManager()
-        : ResourceManager("Shader") {}
+        : ResourceManagerBase("Shader") {}
 
     static std::string ReadFile(const std::string& path);
     static GLuint CompileShader(GLenum type, const std::string& source);

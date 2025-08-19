@@ -8,7 +8,7 @@
 namespace AE
 {
     TextureManager::TextureManager()
-        : ResourceManager("Texture") {}
+        : ResourceManagerBase("Texture") {}
 
     SPtr<Texture> TextureManager::Load(const std::string& name,
         const std::string& path)
