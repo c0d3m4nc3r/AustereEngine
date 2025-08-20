@@ -3,6 +3,7 @@
 #include "Resources/Builtin/Shaders.hpp"
 
 #include <fstream>
+#include <sstream>
 
 namespace AE
 {
