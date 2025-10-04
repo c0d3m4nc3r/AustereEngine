@@ -1,3 +1,7 @@
+**This project is no longer maintained as its code does not reflect my current standards for clean, efficient C++ development. I underwent a radical shift in my coding philosophy starting in September 2025. I leave Austere Engine here only as a reference point to track my rapid professional growth.**
+
+---
+
 # Austere Engine
 
 **Austere Engine** is a minimal, open-source 3D game engine written in modern C++.
